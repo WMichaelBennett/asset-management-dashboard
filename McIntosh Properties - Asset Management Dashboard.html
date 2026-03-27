@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>McIntosh Properties — Asset Management Dashboard</title>
+<style>
+:root{--navy:#1a2744;--navy-light:#253462;--gold:#c9a84c;--gold-light:#e8c87a;--teal:#2a7f8f;--teal-light:#e6f4f6;--green:#2e7d4f;--green-light:#e8f5ee;--red:#c0392b;--red-light:#fdecea;--orange:#d35400;--orange-light:#fef0e6;--amber:#e67e22;--gray-50:#f8f9fa;--gray-100:#f1f3f5;--gray-200:#e9ecef;--gray-300:#dee2e6;--gray-600:#6c757d;--gray-700:#495057;--gray-800:#343a40;--shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow:0 2px 8px rgba(0,0,0,.1);--shadow-lg:0 4px 20px rgba(0,0,0,.12);--radius:8px;--radius-lg:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--gray-100);color:var(--gray-800);line-height:1.5;font-size:14px}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:white;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 28px}
+.header-brand{display:flex;align-items:center;gap:12px}
+.header-logo{width:40px;height:40px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:var(--navy);flex-shrink:0}
+.header-title h1{font-size:19px;font-weight:700}
+.header-title p{font-size:11px;color:rgba(255,255,255,.6)}
+.header-right{display:flex;align-items:center;gap:12px;font-size:12px;color:rgba(255,255,255,.7)}
+.header-pill{background:rgba(255,255,255,.12);padding:5px 11px;border-radius:20px;font-size:11px}
+.nav-tabs{background:var(--navy);border-top:1px solid rgba(255,255,255,.08);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-tab{padding:11px 16px;font-size:12px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;user-select:none}
+.nav-tab:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.05)}
+.nav-tab.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.main{max-width:1500px;margin:0 auto;padding:24px 20px}
+.section{display:none}.section.active{display:block}
+.section-title{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--gray-600);margin-bottom:18px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px}
+.stat-card{background:white;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);border-left:4px solid var(--teal)}
+.stat-card.red{border-left-color:var(--red)}
+.stat-card.amber{border-left-color:var(--amber)}
+.stat-card.green{border-left-color:var(--green)}
+.stat-card.blue{border-left-color:#2563eb}
+.stat-card.gold{border-left-color:var(--gold)}
+.stat-label{font-size:11px;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-value{font-size:24px;font-weight:800;color:var(--navy);line-height:1.1}
+.stat-sub{font-size:11px;color:var(--gray-600);margin-top:2px}
+.table-wrap{background:white;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:auto;margin-bottom:22px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--navy);color:white;padding:10px 12px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--gray-200);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray-50)}
+.num{text-align:right}
+.tenant-name{font-weight:600;color:var(--navy)}
+.notes-cell{font-size:12px;color:var(--gray-600);max-width:280px}
+.hidden{display:none}
+.search-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-bar input,.search-bar select{padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;outline:none}
+.search-bar input:focus,.search-bar select:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(42,127,143,.15)}
+.lease-status{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.status-active{background:var(--green-light);color:var(--green)}
+.status-expiring{background:var(--red-light);color:var(--red)}
+.status-attention{background:var(--orange-light);color:var(--orange)}
+.status-mtm{background:#f3f0ff;color:#5b21b6}
+.status-expired{background:#f1f1f1;color:#666}
+.type-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.type-anchor{background:#dbeafe;color:#1e40af}
+.type-cinema{background:#ede9fe;color:#6d28d9}
+.type-food{background:#fef3c7;color:#92400e}
+.type-retail{background:#f0fdf4;color:#166534}
+.type-service{background:#f0f9ff;color:#075985}
+.type-medical{background:#fff1f2;color:#9f1239}
+.type-financial{background:#f8fafc;color:#334155}
+.type-office{background:#fafaf9;color:#57534e}
+.type-industrial{background:#fff7ed;color:#9a3412}
+.type-land{background:#f7fee7;color:#3f6212}
+.type-vacant{background:#f9f9f9;color:#9ca3af}
+.alert-banner{display:flex;align-items:flex-start;gap:12px;background:var(--red-light);border-left:4px solid var(--red);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--red)}
+.section-divider{height:1px;background:var(--gray-200);margin:24px 0}
+footer{text-align:center;padding:20px;font-size:11px;color:var(--gray-600);border-top:1px solid var(--gray-200);margin-top:40px}
+tr.urgent td{background:#fff8f8}
+tr.attention td{background:#fffbf5}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-logo">M</div>
+      <div class="header-title">
+        <h1>McIntosh Properties</h1>
+        <p>Asset Management Dashboard</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="header-pill" id="hdrDate"></span>
+      <span class="header-pill">Auto-refreshed daily</span>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="show('overview')">📊 Overview</div>
+    <div class="nav-tab" onclick="show('orchard')">🏪 Orchard Plaza (1876)</div>
+    <div class="nav-tab" onclick="show('padsites')">🏢 Pad Sites</div>
+    <div class="nav-tab" onclick="show('office1890')">🏥 1890 Cooper (Office/Medical)</div>
+    <div class="nav-tab" onclick="show('office1980')">🏢 1980 Cooper (Office)</div>
+    <div class="nav-tab" onclick="show('other')">📍 Other Properties</div>
+    <div class="nav-tab" onclick="show('expirations')">⏰ Lease Expirations</div>
+    <div class="nav-tab" onclick="show('cam')">🏗️ CAM Details</div>
+    <div class="nav-tab" onclick="show('financials')">📈 Financial Performance</div>
+  </div>
+</div>
+<div class="main">
+<div class="section active" id="section-overview">
+<div class="section-title">📊 Portfolio Overview</div>
+<div class="section-sub">Live data from Rent Roll & Lease Expiration List · Refreshed March 27, 2026</div>
+<div class="stats-row">
+  <div class="stat-card gold"><div class="stat-label">Total Portfolio Revenue</div><div class="stat-value">$10,448,853</div><div class="stat-sub">Annual — all properties</div></div>
+  <div class="stat-card"><div class="stat-label">Orchard Plaza (1876)</div><div class="stat-value">$6,946,881</div><div class="stat-sub">Inline tenants</div></div>
+  <div class="stat-card"><div class="stat-label">Pad Sites</div><div class="stat-value">$1,232,816</div><div class="stat-sub">6 pad site tenants</div></div>
+  <div class="stat-card"><div class="stat-label">1890 Cooper (Office)</div><div class="stat-value">$849,208</div><div class="stat-sub">Office / Medical</div></div>
+  <div class="stat-card"><div class="stat-label">1980 Cooper (Office)</div><div class="stat-value">$205,258</div><div class="stat-sub">Office / Medical</div></div>
+  <div class="stat-card"><div class="stat-label">Other Properties</div><div class="stat-value">$1,214,690</div><div class="stat-sub">Leckie, Bernard, Penticton, Vernon</div></div>
+</div>
+<div class="stats-row">
+  <div class="stat-card red"><div class="stat-label">Leases Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk revenue: $1,393,307/yr</div></div>
+  <div class="stat-card amber"><div class="stat-label">Leases Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk revenue: $2,879,975/yr</div></div>
+  <div class="stat-card green"><div class="stat-label">Orchard Plaza GLA</div><div class="stat-value">638,757</div><div class="stat-sub">SF · 99.2% occupied</div></div>
+  <div class="stat-card blue"><div class="stat-label">FY2026 CAM Rate (Std)</div><div class="stat-value">$7.50/SF</div><div class="stat-sub">Orchard Plaza — budgeted</div></div>
+</div>
+<div class="alert-banner"><span>⚠️</span><div><strong>Action required:</strong> 15 leases expire by Dec 31/2026, representing $1,393,307 in annual revenue. See the Lease Expirations tab for full details and action notes.</div></div>
+</div>
+<div class="section" id="section-orchard">
+<div class="section-title">🏪 Orchard Plaza — 1876 Cooper Rd, Kelowna</div>
+<div class="section-sub">Inline tenants · 23 tenants · Data from Rent Roll (most recent file)</div>
+<div class="stats-row">
+  <div class="stat-card gold"><div class="stat-label">Annual Rent</div><div class="stat-value">$6,946,881</div><div class="stat-sub">Inline tenants only</div></div>
+  <div class="stat-card"><div class="stat-label">Tenants</div><div class="stat-value">23</div><div class="stat-sub">Active / occupied</div></div>
+</div>
+<div class="search-bar"><input type="text" placeholder="Search tenants…" oninput="filterTbl('tbl-orchard',this.value,'sel-orchard')"><select id="sel-orchard" onchange="filterTbl('tbl-orchard',document.querySelector('.search-bar input').value,'sel-orchard')"><option value="">All Types</option><option value="Anchor">Anchor</option><option value="Cinema">Cinema</option><option value="Food & Bev">Food & Bev</option><option value="Retail">Retail</option><option value="Service">Service</option><option value="Medical">Medical</option><option value="Financial">Financial</option><option value="Office">Office</option><option value="Industrial">Industrial</option><option value="Land">Land</option><option value="Vacant">Vacant</option></select></div>
+<div class="table-wrap"><table id="tbl-orchard"><thead><tr><th onclick="sortTbl('tbl-orchard',0)" style="cursor:pointer">Unit</th><th onclick="sortTbl('tbl-orchard',1)" style="cursor:pointer">Tenant</th><th onclick="sortTbl('tbl-orchard',2)" style="cursor:pointer">GLA (SF)</th><th onclick="sortTbl('tbl-orchard',3)" style="cursor:pointer">Rate/SF</th><th onclick="sortTbl('tbl-orchard',4)" style="cursor:pointer">Monthly</th><th onclick="sortTbl('tbl-orchard',5)" style="cursor:pointer">Annual</th><th onclick="sortTbl('tbl-orchard',6)" style="cursor:pointer">Expiry</th><th onclick="sortTbl('tbl-orchard',7)" style="cursor:pointer">Status</th><th onclick="sortTbl('tbl-orchard',8)" style="cursor:pointer">CAM/mo</th><th onclick="sortTbl('tbl-orchard',9)" style="cursor:pointer">Type</th><th onclick="sortTbl('tbl-orchard',10)" style="cursor:pointer">Notes</th></tr></thead><tbody>
+<tr><td>#101</td><td class="tenant-name">Overwaitea Foods & Drugs</td><td class="num">54,089</td><td class="num">$16.50</td><td class="num">$74,372</td><td class="num">$892,468</td><td>Oct 3/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td class="num">$7,753</td><td><span class="type-badge type-anchor">Anchor</span></td><td class="notes-cell">2x5-yr renewals  local # (250)860-1444 ↑to $16.50 01Apr18</td></tr>
+<tr><td>#100</td><td class="tenant-name">Mountain Equipment Coop</td><td class="num">23,788</td><td class="num">$17.00</td><td class="num">$33,700</td><td class="num">$404,396</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$12,588</td><td><span class="type-badge type-anchor">Anchor</span></td><td class="notes-cell">↓ to $13.00 to Dec 2023 ↑ to $17</td></tr>
+<tr><td>#106</td><td class="tenant-name">Dr. Specs Optical</td><td class="num">1,495</td><td class="num">$27.00</td><td class="num">$3,364</td><td class="num">$40,365</td><td>Mar 31/2028</td><td><span class="lease-status status-active">Active</span></td><td class="num">$934</td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Dean Thomas  (250) 861-1585</td></tr>
+<tr><td>#108</td><td class="tenant-name">O-Ka Japanese Restaurant</td><td class="num">1,350</td><td class="num">$28.00</td><td class="num">$3,150</td><td class="num">$37,800</td><td>Apr 30/2030</td><td><span class="lease-status status-active">Active</span></td><td class="num">$844</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">Trong Tran    (250) 869-1564</td></tr>
+<tr><td>#110</td><td class="tenant-name">HearingLife Canada Ltd.</td><td class="num">1,394</td><td class="num">$29.00</td><td class="num">$3,369</td><td class="num">$40,426</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$871</td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">↑to $28.00 01Apr23 ↑to $29.00 01Apr25 416-925-9223 Siobhan Piluke, Rita Persaud 437-998-8743</td></tr>
+<tr><td>#120</td><td class="tenant-name">Natures Fare (Pattison Food Group)</td><td class="num">11,988</td><td class="num">$24.00</td><td class="num">$23,976</td><td class="num">$287,712</td><td>Dec 14/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td class="num">$7,492</td><td><span class="type-badge type-anchor">Anchor</span></td><td class="notes-cell">Bought by Buy-Low Foods Apr 30/19 ↑to $23/$11 15Dec19 ↑ $24/$12 15Dec22</td></tr>
+<tr><td>#124</td><td class="tenant-name">Running Room Canada Inc.</td><td class="num">1,309</td><td class="num">$30.00</td><td class="num">$3,272</td><td class="num">$39,270</td><td>Oct 31/2028</td><td><span class="lease-status status-active">Active</span></td><td class="num">$818</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">5-yr renewal Roger Dang, CFO 780.439.3099 ↑ to $29 yr 1/2 $30 3/4/5</td></tr>
+<tr><td>#126</td><td class="tenant-name">Chevy's Source For Sports</td><td class="num">5,976</td><td class="num">$24.00</td><td class="num">$11,952</td><td class="num">$143,424</td><td>Feb 28/2030</td><td><span class="lease-status status-active">Active</span></td><td class="num">$3,735</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">5-yr renewal to Feb2035 at $25</td></tr>
+<tr><td>#130</td><td class="tenant-name">Rocky Mountain Fitness</td><td class="num">6,188</td><td class="num">$24.00</td><td class="num">$12,376</td><td class="num">$148,512</td><td>Oct 31/2029</td><td><span class="lease-status status-active">Active</span></td><td class="num">$3,868</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">Sold to Flaman Aaron Wells store Manager,  (250) 861-8868</td></tr>
+<tr><td>#132</td><td class="tenant-name">Urospot</td><td class="num">1,300</td><td class="num">$31.00</td><td class="num">—</td><td class="num">$40,300</td><td>Sep 30/2033</td><td><span class="lease-status status-active">Active</span></td><td class="num">$812</td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">$31 first 22 months $32 next 2 years and $33 last 3 years</td></tr>
+<tr><td>#134</td><td class="tenant-name">Cooper Fine Jewellery Inc</td><td class="num">1,300</td><td class="num">$18.00</td><td class="num">$1,950</td><td class="num">$23,400</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$812</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">250-717-5998 Song Lim</td></tr>
+<tr><td>#136</td><td class="tenant-name">Bone & Biscuit Company</td><td class="num">1,300</td><td class="num">$30.00</td><td class="num">$3,250</td><td class="num">$39,000</td><td>Feb 14/2029</td><td><span class="lease-status status-active">Active</span></td><td class="num">$812</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">Lee Drescher (250) 448-7738 ↑ to $31 Feb27</td></tr>
+<tr><td>#138</td><td class="tenant-name">Little Kitchen Academy</td><td class="num">1,300</td><td class="num">$31.00</td><td class="num">$3,358</td><td class="num">$40,300</td><td>Sep 30/2034</td><td><span class="lease-status status-active">Active</span></td><td class="num">$812</td><td><span class="type-badge type-service">Service</span></td><td class="notes-cell">CAM Nov24 full rent Feb25↑$33 Jan 29 paul_larsen@littlekitchenacademy.com</td></tr>
+<tr><td>#140</td><td class="tenant-name">Yury Salon</td><td class="num">1,300</td><td class="num">$27.00</td><td class="num">$2,925</td><td class="num">$35,100</td><td>Jul 31/2029</td><td><span class="lease-status status-active">Active</span></td><td class="num">$812</td><td><span class="type-badge type-service">Service</span></td><td class="notes-cell">sold to Weave city ↑ to $27 psf Aug 2024.  (250) 861-8442</td></tr>
+<tr><td>#142</td><td class="tenant-name">Chopped Leaf</td><td class="num">1,603</td><td class="num">$30.00</td><td class="num">$4,008</td><td class="num">$48,090</td><td>Mar 31/2034</td><td><span class="lease-status status-active">Active</span></td><td class="num">$1,002</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">5-yr renewal 778-436-8102 ↑$31.00 Apri 1, 2029</td></tr>
+<tr><td>#146</td><td class="tenant-name">Percs Place Ltd.</td><td class="num">1,545</td><td class="num">$28.00</td><td class="num">$3,605</td><td class="num">$43,260</td><td>May 31/2028</td><td><span class="lease-status status-active">Active</span></td><td class="num">$966</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">↑$29. May 15 2026 5-yr renewal  Michelle & Dan Nonis (250) 860-3055 Michell cell phone (250) 317-2628</td></tr>
+<tr><td>#148</td><td class="tenant-name">Mon Thong</td><td class="num">2,258</td><td class="num">$20.00</td><td class="num">$3,763</td><td class="num">$45,160</td><td>Jun 30/2030</td><td><span class="lease-status status-active">Active</span></td><td class="num">$1,411</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">Joe Karunyasopon (250) 860-6809 - currently paying 1/2 gross rent</td></tr>
+<tr><td>#152</td><td class="tenant-name">Orchard Pharmacy (Remedy)</td><td class="num">1,125</td><td class="num">$29.00</td><td class="num">$2,719</td><td class="num">$32,625</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$703</td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">5-yr renewal Bryan McIntyre bryan.healthsource@gmail.com</td></tr>
+<tr><td>#156</td><td class="tenant-name">Kelowna Valley Insurance (Growth Financial</td><td class="num">3,344</td><td class="num">$28.00</td><td class="num">$7,803</td><td class="num">$93,632</td><td>Dec 14/2028</td><td><span class="lease-status status-active">Active</span></td><td class="num">$2,090</td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">Five year renewal</td></tr>
+<tr><td>#160</td><td class="tenant-name">Famous Players</td><td class="num">23,067</td><td class="num">$10.00</td><td class="num">$19,222</td><td class="num">$230,670</td><td>Dec 7/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td class="num">$3,383</td><td><span class="type-badge type-cinema">Cinema</span></td><td class="notes-cell">Renewed to Dec 27 at $10psf</td></tr>
+<tr><td>#170</td><td class="tenant-name">Jysk</td><td class="num">27,049</td><td class="num">$12.00</td><td class="num">$27,049</td><td class="num">$324,588</td><td>Jan 31/2032</td><td><span class="lease-status status-active">Active</span></td><td class="num">$11,045</td><td><span class="type-badge type-anchor">Anchor</span></td><td class="notes-cell">$12 yr 1-3, $13 yr 3-5, $13.50 yr 5-7, $14.00 Yr 7-10, 4x5 yr renewal $14.50, $15.50, $16.50,$17.50</td></tr>
+<tr><td>#172</td><td class="tenant-name">Winners</td><td class="num">33,000</td><td class="num">$13.00</td><td class="num">$35,750</td><td class="num">$429,000</td><td>Feb 19/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td class="num">—</td><td><span class="type-badge type-anchor">Anchor</span></td><td class="notes-cell">3x5-year renewals $12.75 psf YR 1-5, $13 psf 27Mar22 YR 6-10 ($13.50/$14.50/$15.50)</td></tr>
+<tr><td></td><td class="tenant-name">Famous Players</td><td class="num">237,188</td><td class="num">$0.00</td><td class="num">$287,257</td><td class="num">$3,487,383</td><td>Dec 7/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td class="num">—</td><td><span class="type-badge type-cinema">Cinema</span></td><td class="notes-cell"></td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td colspan="2">TOTAL</td><td class="num">—</td><td class="num">—</td><td class="num">$572,190</td><td class="num">$6,946,881</td><td colspan="5"></td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-padsites">
+<div class="section-title">🏢 Pad Sites — Orchard Plaza Area</div>
+<div class="section-sub">7 pad site tenants · Data from Rent Roll</div>
+<div class="stats-row">
+  <div class="stat-card gold"><div class="stat-label">Annual Rent</div><div class="stat-value">$1,232,816</div><div class="stat-sub">All pad sites</div></div>
+  <div class="stat-card"><div class="stat-label">Pad Sites</div><div class="stat-value">7</div></div>
+</div>
+<div class="table-wrap"><table id="tbl-pads"><thead><tr><th>Address</th><th>Tenant</th><th>GLA (SF)</th><th>Rate/SF</th><th>Monthly</th><th>Annual</th><th>Expiry</th><th>Status</th><th>CAM/mo</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Stalls</td><td class="tenant-name">Deco windshield</td><td class="num">0</td><td class="num">$0.00</td><td class="num">$750</td><td class="num">$9,000</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$8</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">Rents stalls for 5 months over summer</td></tr>
+<tr><td>1950 Cooper</td><td class="tenant-name">National Bank (CWB)</td><td class="num">7,350</td><td class="num">$53.00</td><td class="num">$32,462</td><td class="num">$389,550</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$1,471</td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">CWB $53.00 11/24, $55.50 11/29, $58 11/34 3 - 5 year renewals</td></tr>
+<tr><td>1840 Cooper</td><td class="tenant-name">Royal Bank</td><td class="num">9,250</td><td class="num">$37.00</td><td class="num">$28,521</td><td class="num">$342,250</td><td>Jul 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td class="num">$5,781</td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">↑ to $36 Aug 22 - Jul 24, ↑ to $37 Aug 24 2x5-yr renewal. Building Area is actually 9,497 sq ft</td></tr>
+<tr><td>1860 Cooper</td><td class="tenant-name">First West First Credit Union</td><td class="num">5,200</td><td class="num">$41.00</td><td class="num">$17,767</td><td class="num">$213,200</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$3,250</td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">↑ to $41 psf Apr2025, ↑ to $42 Apr2027</td></tr>
+<tr><td>1920 Cooper</td><td class="tenant-name">Red Robin Restaurant</td><td class="num">6,413</td><td class="num">$32.00</td><td class="num">$17,101</td><td class="num">$205,216</td><td>Sep 14/2028</td><td><span class="lease-status status-active">Active</span></td><td class="num">$4,008</td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">1x5-yr renewal ↑to $32 on Sept 15/18. Robert Flagal (416) 450-7233 Haley Calisher (303) 846-6100</td></tr>
+<tr><td>2080B Springfield</td><td class="tenant-name">Healthpoint Laser</td><td class="num">1,700</td><td class="num">$20.00</td><td class="num">$2,833</td><td class="num">$34,000</td><td>Jun 30/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td class="num">$1,062</td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Company bought by Karim Hemani Dec2024 1x10 yr renewal with termination clause</td></tr>
+<tr><td>2080C Springfield</td><td class="tenant-name">Halsa Natural Sleep</td><td class="num">1,800</td><td class="num">$22.00</td><td class="num">$3,300</td><td class="num">$39,600</td><td>—</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td class="num">$1,125</td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">John Pazdzior pazdzior@telus.net (250)215-8976</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td colspan="2">TOTAL</td><td class="num">—</td><td class="num">—</td><td class="num">$102,735</td><td class="num">$1,232,816</td><td colspan="5"></td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-office1890">
+<div class="section-title">🏥 1890 Cooper Rd — Office & Medical</div>
+<div class="section-sub">Professional office, medical tenants and ground lease</div>
+<div class="table-wrap"><table><thead><tr><th>Unit</th><th>Tenant</th><th>GLA (SF)</th><th>Rate/SF</th><th>Monthly</th><th>Annual</th><th>Expiry</th><th>Status</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+<tr><td></td><td class="tenant-name">Royal LePage (Space A)</td><td class="num">8,772</td><td class="num">$18.50</td><td class="num">$13,524</td><td class="num">$162,282</td><td>Aug 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell">Landlord option to vacate Jan 31/2027</td></tr>
+<tr><td></td><td class="tenant-name">Royal LePage (Space B)</td><td class="num">6,148</td><td class="num">$18.50</td><td class="num">$9,478</td><td class="num">$113,738</td><td>Aug 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell">1-yr renewal underway</td></tr>
+<tr><td></td><td class="tenant-name">COHA</td><td class="num">3,056</td><td class="num">$14.00</td><td class="num">$3,565</td><td class="num">$42,784</td><td>Mar 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell">Waiting on Cineplex approval on new terms</td></tr>
+<tr><td></td><td class="tenant-name">Allan & Mulgrew Orthodontics</td><td class="num">2,386</td><td class="num">$16.70</td><td class="num">$3,321</td><td class="num">$47,670</td><td>Sep 30/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell"></td></tr>
+<tr><td></td><td class="tenant-name">Dr. Farquhar</td><td class="num">2,362</td><td class="num">$15.00</td><td class="num">$2,953</td><td class="num">$35,430</td><td>Jul 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Business transitioning to son 2027</td></tr>
+<tr><td></td><td class="tenant-name">Dr. Klara Burlacu Inc</td><td class="num">2,183</td><td class="num">$14.00</td><td class="num">$2,547</td><td class="num">$30,562</td><td>Sep 30/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">10-yr renewal with termination clause</td></tr>
+<tr><td></td><td class="tenant-name">Dr. Sarah Ohnander</td><td class="num">2,402</td><td class="num">$15.00</td><td class="num">$3,003</td><td class="num">$36,030</td><td>Oct 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Combining with unit 220 (10-yr lease)</td></tr>
+<tr><td></td><td class="tenant-name">Chambers Massage</td><td class="num">660</td><td class="num">$15.00</td><td class="num">$825</td><td class="num">$9,900</td><td>Oct 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">No indication won't renew. Begin follow-up now.</td></tr>
+<tr><td></td><td class="tenant-name">Hello Enthusiast</td><td class="num">1,164</td><td class="num">$14.00</td><td class="num">$1,358</td><td class="num">$16,296</td><td>Aug 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">Wants to renew + 5-yr option</td></tr>
+<tr><td></td><td class="tenant-name">Burger King (Ground Lease)</td><td class="num">—</td><td class="num">—</td><td class="num">$13,333</td><td class="num">$160,000</td><td>Dec 31/2025</td><td><span class="lease-status status-expired">EXPIRED</span></td><td><span class="type-badge type-food">Food & Bev</span></td><td class="notes-cell">Ground lease. EXPIRED.</td></tr>
+<tr><td>RBC</td><td class="tenant-name">RBC Branch (Closed)</td><td class="num">6,618</td><td class="num">$28.00</td><td class="num">$15,442</td><td class="num">$185,304</td><td>Jul 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">RBC closed Sep2024. Lease runs to Jul2027.</td></tr>
+<tr><td></td><td class="tenant-name">Focus Rehabilitation</td><td class="num">658</td><td class="num">$14.00</td><td class="num">$768</td><td class="num">$9,212</td><td>Month-to-Month</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell"></td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-office1980">
+<div class="section-title">🏢 1980 Cooper Rd — Office</div>
+<div class="section-sub">Professional office and medical tenants</div>
+<div class="table-wrap"><table><thead><tr><th>Unit</th><th>Tenant</th><th>GLA (SF)</th><th>Rate/SF</th><th>Monthly</th><th>Annual</th><th>Expiry</th><th>Status</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+<tr><td>#107</td><td class="tenant-name">Phase IV Weighloss</td><td class="num">1,240</td><td class="num">$18.00</td><td class="num">$1,860</td><td class="num">$22,320</td><td>Month-to-Month</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell"></td></tr>
+<tr><td>#109</td><td class="tenant-name">Maternity & Uniform Shop</td><td class="num">1,495</td><td class="num">$18.00</td><td class="num">$2,243</td><td class="num">$26,910</td><td>Mar 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell"></td></tr>
+<tr><td>#101</td><td class="tenant-name">Jewellery Clinic</td><td class="num">1,400</td><td class="num">$23.00</td><td class="num">$2,683</td><td class="num">$32,200</td><td>Mar 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell"></td></tr>
+<tr><td>#110</td><td class="tenant-name">Heather Polak</td><td class="num">1,400</td><td class="num">$18.00</td><td class="num">$2,100</td><td class="num">$25,200</td><td>Month-to-Month</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell"></td></tr>
+<tr><td>#206</td><td class="tenant-name">Claude Bernard</td><td class="num">752</td><td class="num">$15.00</td><td class="num">$940</td><td class="num">$11,280</td><td>Jul 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell"></td></tr>
+<tr><td>#212</td><td class="tenant-name">Orchard Chiropractic</td><td class="num">2,312</td><td class="num">$14.00</td><td class="num">$2,697</td><td class="num">$32,368</td><td>Sep 30/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Likely short-term renewal. Need to follow up</td></tr>
+<tr><td>#219</td><td class="tenant-name">Canadian Equipment Finance</td><td class="num">1,480</td><td class="num">$14.00</td><td class="num">$1,727</td><td class="num">$20,720</td><td>Apr 30/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell"></td></tr>
+<tr><td>Stg</td><td class="tenant-name">Storage</td><td class="num">1,142</td><td class="num">$30.00</td><td class="num">$2,855</td><td class="num">$34,260</td><td>Month-to-Month</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td><span class="type-badge type-industrial">Industrial</span></td><td class="notes-cell"></td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-other">
+<div class="section-title">📍 Other Properties</div>
+<div class="section-sub">2130 Leckie Pl, 384 Bernard Ave, 1990 Cooper, 401 Main Penticton, 3124 30th Ave Vernon</div>
+<div class="table-wrap"><table><thead><tr><th>Address / Unit</th><th>Tenant</th><th>GLA (SF)</th><th>Rate/SF</th><th>Monthly</th><th>Annual</th><th>Expiry</th><th>Status</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+<tr><td>2130 Leckie Pl. #100</td><td class="tenant-name">Westwood Fine Cabinetry</td><td class="num">26,740</td><td class="num">$13.00</td><td class="num">$28,970</td><td class="num">$347,760</td><td>Aug 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-industrial">Industrial</span></td><td class="notes-cell"></td></tr>
+<tr><td>2130 Leckie Pl. #300</td><td class="tenant-name">Natures Formula Health Product</td><td class="num">28,420</td><td class="num">$13.00</td><td class="num">$30,788</td><td class="num">$369,460</td><td>Dec 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-industrial">Industrial</span></td><td class="notes-cell">Follow up needed</td></tr>
+<tr><td>1990 Cooper Rd #103</td><td class="tenant-name">Aqua Friends</td><td class="num">3,802</td><td class="num">$20.00</td><td class="num">$6,337</td><td class="num">$76,040</td><td>Month-to-Month</td><td><span class="lease-status status-mtm">Month-to-Month</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell"></td></tr>
+<tr><td>1990 Cooper Rd #104</td><td class="tenant-name">Orchard Medical Centre</td><td class="num">1,979</td><td class="num">$20.00</td><td class="num">$3,298</td><td class="num">$39,580</td><td>Jun 30/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-medical">Medical</span></td><td class="notes-cell">Renewed ↑$0.50/SF/yr</td></tr>
+<tr><td>384 Bernard Ave</td><td class="tenant-name">RBC Branch (Closed)</td><td class="num">6,618</td><td class="num">$28.00</td><td class="num">$15,442</td><td class="num">$185,304</td><td>Jul 31/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">RBC closed Sep2024. Lease runs to Jul2027.</td></tr>
+<tr><td>384 Bernard Ave</td><td class="tenant-name">Hello Enthusiast</td><td class="num">1,164</td><td class="num">$14.00</td><td class="num">$1,358</td><td class="num">$16,296</td><td>Aug 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">Wants to renew + 5-yr option</td></tr>
+<tr><td>401 Main, Penticton</td><td class="tenant-name">Bank of Nova Scotia</td><td class="num">5,000</td><td class="num">$12.70</td><td class="num">$5,292</td><td class="num">$63,500</td><td>Nov 30/2027</td><td><span class="lease-status status-attention">Attention 2027</span></td><td><span class="type-badge type-financial">Financial</span></td><td class="notes-cell">Would like to sublet 50% of space</td></tr>
+<tr><td>3124-30th Ave, Vernon</td><td class="tenant-name">Distinctive Décor</td><td class="num">5,000</td><td class="num">$7.75</td><td class="num">$3,229</td><td class="num">$38,750</td><td>Mar 31/2026</td><td><span class="lease-status status-expiring">⚠️ Expiring 2026</span></td><td><span class="type-badge type-retail">Retail</span></td><td class="notes-cell">EXPIRED — renewal needed urgently</td></tr>
+<tr><td>ARC Programs</td><td class="tenant-name">ARC Programs Ltd.</td><td class="num">6,000</td><td class="num">$13.00</td><td class="num">$6,500</td><td class="num">$78,000</td><td>Dec 31/2025</td><td><span class="lease-status status-expired">EXPIRED</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell">EXPIRED</td></tr>
+<tr><td>WorkSafe BC</td><td class="tenant-name">WorkSafe BC</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>Long-term</td><td><span class="lease-status status-active">Active</span></td><td><span class="type-badge type-office">Office</span></td><td class="notes-cell">Long-term institutional lease</td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-expirations">
+<div class="section-title">⏰ Lease Expirations Tracker</div>
+<div class="section-sub">Live data from Lease Expiration List · 92 upcoming expirations · Refreshed March 27, 2026</div>
+<div class="stats-row">
+  <div class="stat-card red"><div class="stat-label">Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk: $1,393,307/yr</div></div>
+  <div class="stat-card amber"><div class="stat-label">Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk: $2,879,975/yr</div></div>
+</div>
+<div class="table-wrap"><table><thead><tr><th>Expiry Date</th><th>Tenant</th><th>Address</th><th>Unit</th><th class="num">Annual Rent</th><th>Priority</th></tr></thead><tbody>
+<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Dr. Brad Bishop</td><td>1890 Cooper Rd</td><td></td><td class="num">$34,305</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Lee Valley</td><td>1876 Cooper Rd</td><td>#180</td><td class="num">$237,286</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Tareq Aldajani</td><td>1890 Cooper Rd</td><td></td><td class="num">$11,400</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Healthpoint Laser 2080B</td><td></td><td></td><td class="num">$34,000</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Orchard Medical Centre</td><td>1990 Cooper Rd</td><td>#104</td><td class="num">$39,580</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jul 31/2026</strong></td><td class="tenant-name">Dr. Farquhar</td><td>1890 Cooper Rd</td><td></td><td class="num">$35,430</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Hello Enthusiast (HSBC 2nd floor)</td><td>1890 Cooper Rd</td><td></td><td class="num">$16,296</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">$162,282</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">$113,738</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Dr. Klara Burlacu Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$30,562</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Orchard Chiropractic</td><td>1980 Cooper Rd</td><td>#212</td><td class="num">$32,368</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Chambers massage</td><td>1890 Cooper Rd</td><td></td><td class="num">$9,900</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Dr. Sarah Ohnander</td><td>1890 Cooper Rd</td><td></td><td class="num">$36,030</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Dec 7/2026</strong></td><td class="tenant-name">Famous Players</td><td>1876 Cooper Rd</td><td>#160</td><td class="num">$230,670</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Dec 31/2026</strong></td><td class="tenant-name">Natures Formula Health Product</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$369,460</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="attention"><td><strong>Feb 19/2027</strong></td><td class="tenant-name">Winners</td><td>1876 Cooper Rd</td><td>#172</td><td class="num">$429,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">City Centre Antiques</td><td></td><td></td><td class="num">$38,750</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Maternity & Uniform Shop</td><td>1980 Cooper Rd</td><td>#109</td><td class="num">$26,910</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Jewellery Clinic</td><td>1980 Cooper Rd</td><td>Suite  #101</td><td class="num">$32,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">COHA</td><td>1890 Cooper Rd</td><td></td><td class="num">$42,784</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2027</strong></td><td class="tenant-name">Canadian Equipment Finance</td><td>1980 Cooper Rd</td><td>#219</td><td class="num">$20,720</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">International Gateway</td><td></td><td></td><td class="num">$14,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Claude Bernard</td><td>1980 Cooper Rd</td><td>#206</td><td class="num">$11,280</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Block Rewards</td><td></td><td></td><td class="num">$43,386</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">1840 Cooper - Royal Bank</td><td>1876 Cooper Rd</td><td>1840 Cooper</td><td class="num">$342,250</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">RBC Bank (1st floor)</td><td>1890 Cooper Rd</td><td>1st floor</td><td class="num">$185,304</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Invis</td><td>1890 Cooper Rd</td><td></td><td class="num">$18,496</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Westwood Fine Cabinets</td><td></td><td></td><td class="num">$347,760</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2027</strong></td><td class="tenant-name">Rainer Hagemann</td><td></td><td></td><td class="num">$15,829</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2027</strong></td><td class="tenant-name">Allan & Mulgrew Orthodontics</td><td></td><td></td><td class="num">$47,670</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 3/2027</strong></td><td class="tenant-name">Overwaitea Foods & Drugs</td><td>1876 Cooper Rd</td><td>Suite  #101</td><td class="num">$892,468</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2027</strong></td><td class="tenant-name">Cruiseship Centers</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">$20,268</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2027</strong></td><td class="tenant-name">Bank of Nova Scotia</td><td></td><td></td><td class="num">$56,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$287,712</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$7,188</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">$12,780</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">$7,650</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Dr. Specs Optical</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">$40,365</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Canadian Hearing Care</td><td>1876 Cooper Rd</td><td>#110</td><td class="num">$37,638</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 14/2028</strong></td><td class="tenant-name">1860 Cooper - Valley First Credit Union</td><td>1876 Cooper Rd</td><td>1860 Cooper</td><td class="num">$218,400</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2028</strong></td><td class="tenant-name">Sherwin Williams</td><td>1990 Cooper Rd</td><td>#101</td><td class="num">$89,884</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Eco Clean</td><td>1980 Cooper Rd</td><td>#105</td><td class="num">$27,360</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Mascan Equities</td><td></td><td></td><td class="num">$30,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Percs Place Ltd.</td><td>1876 Cooper Rd</td><td>#146</td><td class="num">$43,260</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Paradigm Mortgage Corporation</td><td>1980 Cooper Rd</td><td>#210</td><td class="num">$27,600</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Mission Creek Mortgage Ltd.</td><td>1980 Cooper Rd</td><td>#207</td><td class="num">$18,840</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2028</strong></td><td class="tenant-name">Dr. Darren Berg Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$36,736</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Connect Counselling</td><td>1890 Cooper Rd</td><td></td><td class="num">$55,632</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Diva Nails</td><td>1980 Cooper Rd</td><td>#104</td><td class="num">$21,492</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 14/2028</strong></td><td class="tenant-name">1920 Cooper - Red Robin Restaurant</td><td>1876 Cooper Rd</td><td>1920 Cooper</td><td class="num">$205,216</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2028</strong></td><td class="tenant-name">Wesco</td><td></td><td></td><td class="num">$245,792</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Running Room Canada Inc.</td><td>1876 Cooper Rd</td><td>#124</td><td class="num">$39,270</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Argen</td><td></td><td></td><td class="num">$104,368</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Nucca</td><td>1890 Cooper Rd</td><td></td><td class="num">$26,112</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">123 Dental (Dr. Steven Faigan)</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,928</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">Wolseley</td><td></td><td></td><td class="num">$234,936</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2028</strong></td><td class="tenant-name">Kelowna Valley Insurance</td><td>1876 Cooper Rd</td><td>#156</td><td class="num">$93,632</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2029</strong></td><td class="tenant-name">Dr. Don Eagleton</td><td>1890 Cooper Rd</td><td></td><td class="num">$23,520</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 14/2029</strong></td><td class="tenant-name">Bone & Biscuit Company</td><td>1876 Cooper Rd</td><td>#136</td><td class="num">$40,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2029</strong></td><td class="tenant-name">Dr. Graham Hill Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,576</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Sneak a Peek Ultrasound Inc</td><td>1980 Cooper Rd</td><td>#103</td><td class="num">$26,505</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Bridal Shop</td><td></td><td></td><td class="num">$18,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Yury salon</td><td>1876 Cooper Rd</td><td>#140</td><td class="num">$35,100</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Dr. Stephen Malfair Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">$26,752</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2029</strong></td><td class="tenant-name">Naito/Sambrielaz</td><td>1980 Cooper Rd</td><td>#202</td><td class="num">$21,840</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Oopsie Daisy</td><td></td><td></td><td class="num">$12,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Rocky Mountain Fitness</td><td>1876 Cooper Rd</td><td>#130</td><td class="num">$148,512</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Oopsie Daisy</td><td></td><td></td><td class="num">$13,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2029</strong></td><td class="tenant-name">De Dutch 2080A</td><td>1876 Cooper Rd</td><td>2080A Springfield</td><td class="num">$47,160</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2030</strong></td><td class="tenant-name">Chevy's Source For Sports</td><td>1876 Cooper Rd</td><td>#126</td><td class="num">$143,424</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2030</strong></td><td class="tenant-name">O-Ka Japanese Restaurant</td><td>1876 Cooper Rd</td><td>#108</td><td class="num">$37,800</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2030</strong></td><td class="tenant-name">Empire (Remedy)</td><td>1876 Cooper Rd</td><td>#152</td><td class="num">$32,625</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2030</strong></td><td class="tenant-name">Mon Thong</td><td>1876 Cooper Rd</td><td>#148</td><td class="num">$45,160</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2030</strong></td><td class="tenant-name">Dr. Brendon Burgess Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,416</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2030</strong></td><td class="tenant-name">Intagen Wealth</td><td>1890 Cooper Rd</td><td></td><td class="num">$12,920</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2031</strong></td><td class="tenant-name">National Computer Resource Ltd</td><td>1980 Cooper Rd</td><td>#102</td><td class="num">$26,910</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2031</strong></td><td class="tenant-name">Oxford 5 acre ground lease</td><td></td><td></td><td class="num">$750,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2031</strong></td><td class="tenant-name">220 Dr Ohnander</td><td>1890 Cooper Rd</td><td>220</td><td class="num">$16,480</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2032</strong></td><td class="tenant-name">Jysk</td><td>1876 Cooper Rd</td><td>#170</td><td class="num">$379,862</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2033</strong></td><td class="tenant-name">Urospot</td><td>1876 Cooper Rd</td><td>#132</td><td class="num">$40,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2033</strong></td><td class="tenant-name">Gentek Building Supplies</td><td></td><td></td><td class="num">$675,645</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Chopped Leaf</td><td>1876 Cooper Rd</td><td>#142</td><td class="num">$49,693</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Hut 8</td><td></td><td></td><td class="num">$438,138</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2034</strong></td><td class="tenant-name">Kelowna Medical Imaging</td><td>1890 Cooper Rd</td><td></td><td class="num">$41,616</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2034</strong></td><td class="tenant-name">Little Kitchen Academy</td><td>1876 Cooper Rd</td><td>#138</td><td class="num">$42,900</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 30/2035</strong></td><td class="tenant-name">Safe Harbour</td><td>1980 Cooper Rd</td><td>#108</td><td class="num">$25,128</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2036</strong></td><td class="tenant-name">MEC</td><td>1876 Cooper Rd</td><td>#100</td><td class="num">$428,184</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2036</strong></td><td class="tenant-name">115-1890 Cooper Dr Sida Zeng</td><td>1890 Cooper Rd</td><td>115</td><td class="num">$31,584</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2036</strong></td><td class="tenant-name">WorkSafe BC</td><td></td><td></td><td class="num">$1,644,852</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2039</strong></td><td class="tenant-name">1950 Cooper - National Bank</td><td>1876 Cooper Rd</td><td>1950 Cooper</td><td class="num">$426,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2040</strong></td><td class="tenant-name"></td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2040</strong></td><td class="tenant-name"></td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+</tbody></table></div>
+</div>
+<div class="section" id="section-cam">
+<div class="section-title">🏗️ CAM Details — All Properties</div>
+<div class="section-sub">Fiscal Year 2025 Year-End CAM Reconciliation (Oct 1/2024 – Sep 30/2025) · Source: FY2025 YE CAM workbooks</div>
+<div class="stats-row">
+  <div class="stat-card gold"><div class="stat-label">Portfolio Total Revenue</div><div class="stat-value">$10,215,972</div><div class="stat-sub">FY2025 across all 13 properties</div></div>
+  <div class="stat-card"><div class="stat-label">Total Operating Expenses</div><div class="stat-value">$1,067,573</div><div class="stat-sub">Net of tenant recoveries</div></div>
+  <div class="stat-card green"><div class="stat-label">Portfolio Net Income</div><div class="stat-value">$9,148,401</div><div class="stat-sub">12/13 properties cash-positive</div></div>
+  <div class="stat-card blue"><div class="stat-label">Total CAM Pool (Allocable)</div><div class="stat-value">$3,052,586</div><div class="stat-sub">Recoverable from tenants across portfolio</div></div>
+  <div class="stat-card"><div class="stat-label">Orchard Plaza CAM Rate</div><div class="stat-value">$7.08/SF</div><div class="stat-sub">FY2025 actual (est. $7.50/SF FY2026)</div></div>
+  <div class="stat-card amber"><div class="stat-label">Landlord-Cost Properties</div><div class="stat-value">1</div><div class="stat-sub">3119 30th Ave, Vernon (NOI -$77,891)</div></div>
+</div>
+<div class="section-title" style="font-size:15px;margin-top:8px;margin-bottom:12px">📊 Portfolio CAM Summary — FY2025</div>
+<div class="table-wrap"><table><thead><tr><th>Property</th><th>Address</th><th>City</th><th>GLA (SF)</th><th>CAM Rate/SF</th><th>Total OpEx</th><th>Revenue</th><th>Net Income</th><th>CAM Pool</th><th>Notes</th></tr></thead><tbody>
+<tr><td class="tenant-name">Orchard Plaza</td><td>1876 Cooper Rd</td><td>Kelowna</td><td class="num">166,282</td><td class="num">$7.08</td><td class="num">$645,191</td><td class="num">$4,866,355</td><td class="num" style="color:var(--green);font-weight:600">$4,221,164</td><td class="num">$890,355</td><td class="notes-cell" style="font-size:11px">Multi-tenant retail. CAM pool excl. Cineplex/JYSK. Overwaitea CPI-capped. FY2025 combined CAM+Tax: $7.08/SF (est. $7.50/SF).</td></tr>
+<tr><td class="tenant-name">Orchard Plaza II</td><td>1876 Cooper (pad sites)</td><td>Kelowna</td><td class="num">13,582</td><td class="num">$7.64</td><td class="num">$34,914</td><td class="num">$426,422</td><td class="num" style="color:var(--green);font-weight:600">$391,508</td><td class="num">$103,763</td><td class="notes-cell" style="font-size:11px">Ground-floor inline + office tenants. CAM rate $7.64/SF on 13,582 SF GLA.</td></tr>
+<tr><td class="tenant-name">1890 Cooper Rd</td><td>1890 Cooper Rd</td><td>Kelowna</td><td class="num">53,177</td><td class="num">$13.34</td><td class="num">$65,706</td><td class="num">$871,994</td><td class="num" style="color:var(--green);font-weight:600">$806,288</td><td class="num">$709,574</td><td class="notes-cell" style="font-size:11px">Professional/medical office complex. Higher CAM rate reflects multi-tenant services. Includes storage units.</td></tr>
+<tr><td class="tenant-name">1990 Cooper Rd</td><td>1990 Cooper Rd</td><td>Kelowna</td><td class="num">—</td><td class="num">N/A</td><td class="num">$3,236</td><td class="num">$205,504</td><td class="num" style="color:var(--green);font-weight:600">$202,268</td><td class="num">$3,236</td><td class="notes-cell" style="font-size:11px">Single-tenant (Sherwin-Williams). Net lease; CAM negligible. Tenant responsible for most operating costs.</td></tr>
+<tr><td class="tenant-name">2130 Leckie Place</td><td>2130 Leckie Place</td><td>Kelowna</td><td class="num">86,000</td><td class="num">$3.97</td><td class="num">$47,849</td><td class="num">$1,063,414</td><td class="num" style="color:var(--green);font-weight:600">$1,015,565</td><td class="num">$341,649</td><td class="notes-cell" style="font-size:11px">Industrial. Key CAM: Snow $13,192; Water/Sewer $117,233; Insurance $30,560; Admin 15%. Total CAM pool $341,649.</td></tr>
+<tr><td class="tenant-name">2300 Leckie Place</td><td>2300 Leckie Rd</td><td>Kelowna</td><td class="num">—</td><td class="num">N/A</td><td class="num">$92,514</td><td class="num">$1,173,445</td><td class="num" style="color:var(--green);font-weight:600">$1,080,931</td><td class="num">$554,691</td><td class="notes-cell" style="font-size:11px">Single-tenant (WorkSafeBC). Recoverable expenses: $554,691; recovered from tenant: $531,634. Balance: $23,057 unrecovered.</td></tr>
+<tr><td class="tenant-name">2120 Leckie Place</td><td>2120 Leckie Place</td><td>Kelowna</td><td class="num">41,165</td><td class="num">$4.47</td><td class="num">$59,110</td><td class="num">$606,955</td><td class="num" style="color:var(--green);font-weight:600">$547,845</td><td class="num">$181,368</td><td class="notes-cell" style="font-size:11px">Industrial. Key CAM: Water/Sewer $67,849; Snow $11,202; Landscaping $6,988; Insurance $12,845; Admin 10%.</td></tr>
+<tr><td class="tenant-name">2821 Fenwick Rd</td><td>2821 Fenwick Rd</td><td>Kelowna</td><td class="num">—</td><td class="num">N/A</td><td class="num" style="color:var(--green);font-weight:600">$-25,684</td><td class="num">$562,756</td><td class="num" style="color:var(--green);font-weight:600">$588,440</td><td class="num">$147,038</td><td class="notes-cell" style="font-size:11px">Single-tenant (Associated Material LLC / Gentek). Recovery EXCEEDS costs — net CAM credit. Prop tax $103,390 fully recovered. FY2025 refund to tenant: $24,694.</td></tr>
+<tr><td class="tenant-name">384 Bernard Ave</td><td>384 Bernard Ave</td><td>Kelowna</td><td class="num">13,617</td><td class="num">$0.50</td><td class="num">$23,206</td><td class="num">$216,407</td><td class="num" style="color:var(--green);font-weight:600">$193,201</td><td class="num">$6,861</td><td class="notes-cell" style="font-size:11px">Mixed-use (RBC anchor, office above). CAM rate $0.50/SF for RBC (negotiated). Total CAM pool $6,861 on building portion.</td></tr>
+<tr><td class="tenant-name">515 Bernard Ave</td><td>515 Bernard Ave</td><td>Kelowna</td><td class="num">6,000</td><td class="num">$5.41</td><td class="num">$3,864</td><td class="num">$78,000</td><td class="num" style="color:var(--green);font-weight:600">$74,136</td><td class="num">$32,432</td><td class="notes-cell" style="font-size:11px">Single-tenant (ARC Programs). CAM: $32,432 actual; tenant estimated more — refund of $818 at year-end. Prop tax: $26,053.</td></tr>
+<tr><td class="tenant-name">401 Main St</td><td>401 Main St</td><td>Penticton</td><td class="num">6,000</td><td class="num">$4.38</td><td class="num">$16,308</td><td class="num">$88,458</td><td class="num" style="color:var(--green);font-weight:600">$72,151</td><td class="num">$26,298</td><td class="notes-cell" style="font-size:11px">Bank of Nova Scotia + Mascan Enterprises. Total CAM: $26,298; prop tax: $12,521; insurance: $2,163. CAM $4.38/SF.</td></tr>
+<tr><td class="tenant-name">3119 30th Ave</td><td>3119 - 30th Ave</td><td>Vernon</td><td class="num">4,348</td><td class="num">$6.88</td><td class="num">$93,720</td><td class="num">$15,829</td><td class="num" style="color:var(--red);font-weight:600">$-77,891</td><td class="num">$29,909</td><td class="notes-cell" style="font-size:11px">⚠️ Landlord-cost property. NOI negative -$77,891. Recoverable: $29,909; non-recoverable: $67,928 (major bldg maint). Tenant: Record City.</td></tr>
+<tr><td class="tenant-name">3120 30th Ave</td><td>3120 - 30th Ave</td><td>Vernon</td><td class="num">5,850</td><td class="num">$4.34</td><td class="num">$7,639</td><td class="num">$40,433</td><td class="num" style="color:var(--green);font-weight:600">$32,795</td><td class="num">$25,412</td><td class="notes-cell" style="font-size:11px">Tenants: Simply Baskets, Victoria Lane Bridal. Total CAM: $25,412; prop tax: $16,356. CAM rate $4.34/SF.</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td colspan="5">PORTFOLIO TOTAL</td><td class="num">$1,067,573</td><td class="num">$10,215,972</td><td class="num" style="color:var(--green)">$9,148,401</td><td class="num">$3,052,586</td><td></td></tr>
+</tbody></table></div>
+<div class="section-title" style="font-size:15px;margin-top:24px;margin-bottom:6px">🏪 Orchard Plaza (1876 Cooper Rd) — Detailed Reconciliation</div>
+<div class="section-sub">Full YE CAM reconciliation · Tenant-by-tenant breakdown · FY2025</div>
+<div class="alert-banner" style="background:linear-gradient(135deg,#e8f5ee,#d5eed9);border-left-color:#2e7d4f;color:#1a4731"><span>✅</span><div><strong>FY2025 Reconciliation Complete.</strong> CAM pool: $890,355 ($3.37/SF). Combined CAM + Property Tax: <strong>$7.08/SF</strong> actual vs. $7.50/SF estimated. Most tenants received refunds — largest: MEC ($71,706), National Bank ($57,838), Royal Bank ($50,751).</div></div>
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-label">Total Common Area Expenses</div><div class="stat-value">$1,634,478</div><div class="stat-sub">FY2025 actual operating costs</div></div>
+  <div class="stat-card"><div class="stat-label">Allocable CAM Pool</div><div class="stat-value">$890,355</div><div class="stat-sub">$3.37/SF recoverable</div></div>
+  <div class="stat-card"><div class="stat-label">Property Taxes Allocated</div><div class="stat-value">$558,233</div><div class="stat-sub">$3.71/SF to tenants</div></div>
+  <div class="stat-card blue"><div class="stat-label">Combined CAM + Tax</div><div class="stat-value">$7.08/SF</div><div class="stat-sub">FY2025 actual · FY2026 est: $7.50</div></div>
+  <div class="stat-card red"><div class="stat-label">Total Refunds Issued</div><div class="stat-value">$199,395</div><div class="stat-sub">Applied to December invoices</div></div>
+  <div class="stat-card green"><div class="stat-label">Balance Due to McIntosh</div><div class="stat-value">$227</div><div class="stat-sub">Overwaitea adjustment</div></div>
+</div>
+<div class="section-title" style="font-size:14px;margin-top:8px;margin-bottom:10px">📋 Operating Expense Breakdown</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">Amount</th><th class="num">% of Total</th></tr></thead><tbody>
+<tr><td>Advertising</td><td class="num">$35,833</td><td class="num">2.2%</td></tr>
+<tr><td>Parking Lot — Maintenance & Repair</td><td class="num">$42,069</td><td class="num">2.6%</td></tr>
+<tr><td>Landscaping</td><td class="num">$58,483</td><td class="num">3.6%</td></tr>
+<tr><td>Security</td><td class="num">$158,285</td><td class="num">9.7%</td></tr>
+<tr><td>Waste Removal</td><td class="num">$105,526</td><td class="num">6.5%</td></tr>
+<tr><td>HVAC / Roof-Top Units</td><td class="num">$125,780</td><td class="num">7.7%</td></tr>
+<tr><td>Exterior Lighting & Electrical</td><td class="num">$33,540</td><td class="num">2.1%</td></tr>
+<tr><td>General Maintenance</td><td class="num">$71,239</td><td class="num">4.4%</td></tr>
+<tr><td>Management Fee</td><td class="num">$135,550</td><td class="num">8.3%</td></tr>
+<tr><td>Snow & Ice Removal</td><td class="num">$14,900</td><td class="num">0.9%</td></tr>
+<tr><td>Insurance</td><td class="num">$57,803</td><td class="num">3.5%</td></tr>
+<tr><td>Cleaning / Janitorial (Common Areas)</td><td class="num">$30,282</td><td class="num">1.9%</td></tr>
+<tr><td>Miscellaneous / Admin</td><td class="num">$165,068</td><td class="num">10.1%</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Total Common Area Expenses</td><td class="num">$1,634,478</td><td class="num">100%</td></tr>
+</tbody></table></div>
+<div class="section-title" style="font-size:14px;margin-top:20px;margin-bottom:10px">⚡ Special CAM Arrangements (FY2026)</div>
+<div class="table-wrap"><table><thead><tr><th>Tenant</th><th class="num">FY2026 Rate</th><th>Details</th></tr></thead><tbody>
+<tr><td class="tenant-name">Standard tenants</td><td class="num"><strong>$7.50/SF</strong></td><td>Per SF/yr — applicable to most inline tenants and pad sites</td></tr>
+<tr><td class="tenant-name">MEC (#100)</td><td class="num"><strong>$6.35/SF</strong></td><td>Per SF/yr — negotiated cap per lease</td></tr>
+<tr style="background:var(--teal-light)"><td class="tenant-name">Overwaitea / Save-On (#101)</td><td class="num"><strong>$1.72/SF</strong></td><td>Per SF/yr — CPI-capped rate; increases ~2–3%/yr</td></tr>
+<tr style="background:#fef9e7"><td class="tenant-name">Famous Players / Cineplex (#160)</td><td class="num"><strong>Excluded</strong></td><td>Excluded from standard CAM & property tax pool (lease carve-out)</td></tr>
+<tr style="background:#fef9e7"><td class="tenant-name">Former Target / JYSK (#170 area)</td><td class="num"><strong>Excluded</strong></td><td>Excluded from property tax allocation per lease</td></tr>
+</tbody></table></div>
+<div class="section-title" style="font-size:14px;margin-top:20px;margin-bottom:10px">💰 FY2025 Year-End Reconciliation by Tenant</div>
+<div class="section-sub">Positive = tenant owes McIntosh · Negative = refund applied to December invoice</div>
+<div class="table-wrap"><table><thead><tr><th>Unit</th><th>Tenant</th><th class="num">GLA (SF)</th><th class="num">CAM Rate/SF</th><th class="num">YE Balance</th><th>Status</th></tr></thead><tbody>
+<tr><td>#100</td><td class="tenant-name">Mountain Equipment Co-op (MEC)</td><td class="num">23,788</td><td class="num">$6.35</td><td class="num" style="color:var(--red);font-weight:600">$-71,706</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#101</td><td class="tenant-name">Overwaitea Foods & Drugs</td><td class="num">54,089</td><td class="num">$1.72</td><td class="num" style="color:var(--green);font-weight:600">+$227</td><td><span class="lease-status status-attention">Owes McIntosh</span></td></tr>
+<tr><td>#106</td><td class="tenant-name">Dr. Specs Optical</td><td class="num">1,495</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-659</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#108</td><td class="tenant-name">O-Ka Japanese Restaurant</td><td class="num">1,350</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-595</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#110</td><td class="tenant-name">HearingLife Canada Ltd.</td><td class="num">1,394</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-615</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#120</td><td class="tenant-name">Natures Fare</td><td class="num">11,988</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-5,287</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#124</td><td class="tenant-name">Running Room Canada Inc.</td><td class="num">1,309</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-577</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#126</td><td class="tenant-name">Chevy's Source For Sports</td><td class="num">5,976</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-2,635</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#130</td><td class="tenant-name">Rocky Mountain Fitness</td><td class="num">6,188</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-2,729</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#134</td><td class="tenant-name">Cooper Fine Jewellery</td><td class="num">1,300</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-573</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#136</td><td class="tenant-name">Bone & Biscuit Company</td><td class="num">1,300</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-573</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#138</td><td class="tenant-name">Little Kitchen Academy</td><td class="num">1,300</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-526</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#140</td><td class="tenant-name">Yury Salon</td><td class="num">1,300</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-573</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>#142</td><td class="tenant-name">Chopped Leaf</td><td class="num">1,603</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-707</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>1950 Cooper</td><td class="tenant-name">National Bank (CWB)</td><td class="num">7,350</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-57,838</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>1840 Cooper</td><td class="tenant-name">Royal Bank of Canada</td><td class="num">9,250</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-50,751</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>1920 Cooper</td><td class="tenant-name">Red Robin Restaurant</td><td class="num">6,413</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-2,184</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr><td>2080B Springfield</td><td class="tenant-name">Healthpoint Laser</td><td class="num">1,700</td><td class="num">$7.08</td><td class="num" style="color:var(--red);font-weight:600">$-867</td><td><span class="lease-status status-mtm">Refund Issued</span></td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td colspan="2">NET TOTAL</td><td class="num">—</td><td class="num">—</td><td class="num" style="color:var(--red)">$-199,168</td><td>Net refunded</td></tr>
+</tbody></table></div>
+<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-top:8px;font-size:12px;color:var(--gray-700)">
+<strong>Orchard Plaza Notes:</strong> Overwaitea CAM capped by CPI formula. Famous Players / Cineplex excluded from CAM pool and property tax allocation. JYSK/former Target excluded from property tax. Fiscal year: Oct 1 – Sep 30. Reconciliations applied to December rent invoices. Source: Orchard Plaza YE CAM (1).xlsx
+</div>
+<div class="section-title" style="font-size:15px;margin-top:28px;margin-bottom:10px">🏭 Other Properties — FY2025 Operating Expense Detail</div>
+<div class="section-sub">Key expense categories by property · Source: Individual FY2025 CAM workbooks</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">2130 Leckie Place, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Industrial/commercial. CAM rate $3.97/SF. Admin @ 15%.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Snow Removal</td><td class="num">$13,192</td></tr>
+<tr><td>Sweeping</td><td class="num">$1,979</td></tr>
+<tr><td>Water and Sewer</td><td class="num">$117,233</td></tr>
+<tr><td>Insurance</td><td class="num">$30,560</td></tr>
+<tr><td>Administration @ 15%</td><td class="num">$10,031</td></tr>
+<tr><td>General Maintenance</td><td class="num">$11,066</td></tr>
+<tr><td>Common Area (Other)</td><td class="num">$22,619</td></tr>
+<tr><td>Non-Recoverable Bldg Maint</td><td class="num">$73,177</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$279,857</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">2120 Leckie Place, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Industrial. CAM rate $4.47/SF. Admin @ 10%.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Water and Sewer</td><td class="num">$67,849</td></tr>
+<tr><td>Snow Removal</td><td class="num">$11,202</td></tr>
+<tr><td>Landscaping</td><td class="num">$6,988</td></tr>
+<tr><td>Insurance</td><td class="num">$12,845</td></tr>
+<tr><td>Heat-Air Service</td><td class="num">$4,308</td></tr>
+<tr><td>General Maintenance</td><td class="num">$9,780</td></tr>
+<tr><td>Security</td><td class="num">$4,736</td></tr>
+<tr><td>Sweeping</td><td class="num">$931</td></tr>
+<tr><td>Window Cleaning</td><td class="num">$2,023</td></tr>
+<tr><td>Administration @ 10%</td><td class="num">$5,302</td></tr>
+<tr><td>Lighting Hydro</td><td class="num">$4,068</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$130,032</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">2300 Leckie Rd, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Single-tenant WorkSafeBC. Net-recoverable lease. Unrecovered: ~$23,057.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Snow Removal</td><td class="num">$20,132</td></tr>
+<tr><td>Administration @ 5%</td><td class="num">$65,420</td></tr>
+<tr><td>Insurance</td><td class="num">$30,642</td></tr>
+<tr><td>General Maintenance</td><td class="num">$11,095</td></tr>
+<tr><td>Other Operating</td><td class="num">$18,780</td></tr>
+<tr><td>Unrecovered (balance)</td><td class="num">$23,057</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$169,126</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">2821 Fenwick Rd, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Single-tenant Gentek/Associated Material. Net recovery EXCEEDS costs in FY2025.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$103,390</td></tr>
+<tr><td>Snow Removal</td><td class="num">$10,142</td></tr>
+<tr><td>Insurance</td><td class="num">$10,947</td></tr>
+<tr><td>Landscaping</td><td class="num">$6,335</td></tr>
+<tr><td>General Maintenance</td><td class="num">$7,118</td></tr>
+<tr><td>Heat-Air Service</td><td class="num">$2,621</td></tr>
+<tr><td>Sweeping</td><td class="num">$990</td></tr>
+<tr><td>Security</td><td class="num">$571</td></tr>
+<tr><td>Water and Sewer</td><td class="num">$660</td></tr>
+<tr><td>Elevator</td><td class="num">$1,710</td></tr>
+<tr><td>Administration @ 15%</td><td class="num">$4,265</td></tr>
+<tr><td>Operating Expense Recovery</td><td class="num" style="color:var(--green)">$-170,557</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$-21,808</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">401 Main St, Penticton</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Bank of Nova Scotia + Mascan Enterprises. CAM $4.38/SF on 6,000 SF.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$12,521</td></tr>
+<tr><td>Insurance</td><td class="num">$2,163</td></tr>
+<tr><td>Non-Recoverable Bldg Maint</td><td class="num">$4,971</td></tr>
+<tr><td>Non-Recoverable Operating</td><td class="num">$2,257</td></tr>
+<tr><td>Recoverable CAM Total</td><td class="num">$26,298</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$48,210</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">384 Bernard Ave, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">RBC (anchor) + office tenants. RBC CAM rate: $0.50/SF (negotiated).</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$20,439</td></tr>
+<tr><td>Insurance</td><td class="num">$3,696</td></tr>
+<tr><td>Landscaping/Lot Cleanup</td><td class="num">$2,453</td></tr>
+<tr><td>Sweep/Snow Removal</td><td class="num">$2,825</td></tr>
+<tr><td>Heat/Air Service</td><td class="num">$2,255</td></tr>
+<tr><td>General Maintenance</td><td class="num">$730</td></tr>
+<tr><td>Elevator</td><td class="num">$314</td></tr>
+<tr><td>Common Area Maint</td><td class="num">$2,145</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$34,857</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">515 Bernard Ave, Kelowna</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Single-tenant ARC Programs. CAM $5.41/SF. $818 year-end refund.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$26,053</td></tr>
+<tr><td>Insurance</td><td class="num">$2,551</td></tr>
+<tr><td>General Maintenance</td><td class="num">$2,902</td></tr>
+<tr><td>Heat-Air Service</td><td class="num">$926</td></tr>
+<tr><td>Non-Recoverable Bldg Maint</td><td class="num">$1,091</td></tr>
+<tr><td>Non-Recoverable Operating</td><td class="num">$3,592</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$37,115</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">3119 30th Ave, Vernon</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">⚠️ Record City. NOI negative. Large non-recoverable maintenance costs.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$17,105</td></tr>
+<tr><td>Insurance</td><td class="num">$1,481</td></tr>
+<tr><td>General Maintenance</td><td class="num">$5,979</td></tr>
+<tr><td>Heat-Air Gas</td><td class="num">$2,535</td></tr>
+<tr><td>Water and Sewer</td><td class="num">$1,939</td></tr>
+<tr><td>Electricity</td><td class="num">$870</td></tr>
+<tr><td>HVAC-General Maint</td><td class="num">$5,979</td></tr>
+<tr><td>Non-Recoverable Bldg Maint</td><td class="num">$65,948</td></tr>
+<tr><td>Non-Recoverable Operating</td><td class="num">$1,980</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$103,816</td></tr>
+</tbody></table></div>
+</div>
+<div style="margin-bottom:20px">
+<div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:4px">3120 30th Ave, Vernon</div>
+<div style="font-size:11px;color:var(--gray-600);margin-bottom:8px">Simply Baskets + Victoria Lane Bridal. CAM $4.34/SF.</div>
+<div class="table-wrap"><table><thead><tr><th>Expense Category</th><th class="num">FY2025 Amount</th></tr></thead><tbody>
+<tr><td>Property Taxes</td><td class="num">$16,356</td></tr>
+<tr><td>Insurance</td><td class="num">$1,373</td></tr>
+<tr><td>Electricity</td><td class="num">$2,939</td></tr>
+<tr><td>Heat-Air Gas</td><td class="num">$2,762</td></tr>
+<tr><td>General Maintenance</td><td class="num">$708</td></tr>
+<tr><td>Water and Sewer</td><td class="num">$1,275</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>Net Operating Expenses</td><td class="num">$25,413</td></tr>
+</tbody></table></div>
+</div>
+<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-top:8px;font-size:12px;color:var(--gray-700)">
+<strong>Notes:</strong> All figures from FY2025 YE CAM workbooks (fiscal year Oct 1/2024 – Sep 30/2025). Reconciliation balances applied to December rent invoices. Net operating expenses shown are after tenant CAM recoveries where applicable. Properties without GLA shown use gross lease or net-lease structures.
+</div>
+</div>
+<div class="section" id="section-financials">
+<div class="section-title">📈 Financial Performance — Real Estate Portfolio</div>
+<div class="section-sub">Source: FY2025 Comparison Tables · Real estate revenue & operating expenses only · Non-real estate income excluded</div>
+<div class="stats-row">
+  <div class="stat-card gold"><div class="stat-label">Total RE Revenue FY2025</div><div class="stat-value">$11,386,530</div><div class="stat-sub">▲ 7.8% vs FY2024</div></div>
+  <div class="stat-card green"><div class="stat-label">Total RE Revenue FY2024</div><div class="stat-value">$10,563,330</div><div class="stat-sub">Prior year comparison</div></div>
+  <div class="stat-card"><div class="stat-label">Operating Expenses FY2025</div><div class="stat-value">$4,245,551</div><div class="stat-sub">37.3% of gross revenue</div></div>
+  <div class="stat-card blue"><div class="stat-label">Expense Recovery FY2025</div><div class="stat-value">$4,021,469</div><div class="stat-sub">94.7% of opex recovered from tenants</div></div>
+  <div class="stat-card green"><div class="stat-label">Net Operating Expense</div><div class="stat-value">$224,082</div><div class="stat-sub">After tenant recoveries (CAM, taxes)</div></div>
+</div>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#0369a1"><strong>Note on reconciliation:</strong> Revenue figures are contracted real estate income by property. Operating expenses are property-level costs (taxes, maintenance, insurance, etc.), most of which are recovered through CAM charges. Non-real estate income (investments, interest) is excluded. Financing costs (mortgage interest) and corporate G&A are separate.</div>
+<div class="section-title" style="font-size:15px;margin-bottom:12px">🏢 Revenue by Property — 3-Year Comparison</div>
+<div class="table-wrap"><table id="tbl-fin-rev"><thead><tr><th onclick="sortTbl('tbl-fin-rev',0)" style="cursor:pointer">Property ↕</th><th class="num">FY2023</th><th class="num">FY2024</th><th class="num" onclick="sortTbl('tbl-fin-rev',3)" style="cursor:pointer">FY2025 ↕</th><th class="num">YoY Change</th><th class="num">% of Portfolio</th><th>Notes</th></tr></thead><tbody>
+<tr><td class="tenant-name">Plaza</td><td class="num">$4,694,417</td><td class="num">$4,313,243</td><td class="num"><strong>$4,923,630</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $610,387 (14.2%)</td><td class="num">43.2%</td><td class="notes-cell">Jysk & CWB</td></tr>
+<tr><td class="tenant-name">2300 Leckie Place</td><td class="num">$1,238,865</td><td class="num">$1,238,865</td><td class="num"><strong>$1,238,865</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">10.9%</td><td class="notes-cell"></td></tr>
+<tr><td class="tenant-name">2130 Leckie Place</td><td class="num">$980,211</td><td class="num">$1,029,359</td><td class="num"><strong>$1,073,407</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $44,048 (4.3%)</td><td class="num">9.4%</td><td class="notes-cell">Base rent increase Hut 8, Natures and Westwood</td></tr>
+<tr><td class="tenant-name">1890 Cooper</td><td class="num">$866,392</td><td class="num">$936,428</td><td class="num"><strong>$921,677</strong></td><td class="num" style="color:var(--red);font-weight:600">▼ $14,751 (1.6%)</td><td class="num">8.1%</td><td class="notes-cell">Kendall James left in July</td></tr>
+<tr><td class="tenant-name">OP 5 acre</td><td class="num">$750,000</td><td class="num">$750,000</td><td class="num"><strong>$750,000</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">6.6%</td><td class="notes-cell"></td></tr>
+<tr><td class="tenant-name">2120 Leckie Place</td><td class="num">$572,200</td><td class="num">$598,175</td><td class="num"><strong>$613,744</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $15,569 (2.6%)</td><td class="num">5.4%</td><td class="notes-cell">base rent increase Wolseley</td></tr>
+<tr><td class="tenant-name">2821 Fenwick</td><td class="num">$213,871</td><td class="num">$398,179</td><td class="num"><strong>$568,766</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $170,587 (42.8%)</td><td class="num">5.0%</td><td class="notes-cell">Gentek and addition to space</td></tr>
+<tr><td class="tenant-name">1980 Cooper</td><td class="num">$459,337</td><td class="num">$466,125</td><td class="num"><strong>$449,835</strong></td><td class="num" style="color:var(--red);font-weight:600">▼ $16,290 (3.5%)</td><td class="num">4.0%</td><td class="notes-cell">Thode vacant / Oakwyn Realty vacated.</td></tr>
+<tr><td class="tenant-name">384 Bernard</td><td class="num">$250,532</td><td class="num">$208,813</td><td class="num"><strong>$216,407</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $7,594 (3.6%)</td><td class="num">1.9%</td><td class="notes-cell">RBC closing but still paying, block rewards</td></tr>
+<tr><td class="tenant-name">1990 Cooper</td><td class="num">$205,220</td><td class="num">$206,704</td><td class="num"><strong>$206,704</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">1.8%</td><td class="notes-cell">Sherwin Williams contraction</td></tr>
+<tr><td class="tenant-name">Burger King</td><td class="num">$160,000</td><td class="num">$160,000</td><td class="num"><strong>$160,000</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">1.4%</td><td class="notes-cell">N/A</td></tr>
+<tr><td class="tenant-name">401 Main St Penticton (BNS)</td><td class="num">$89,996</td><td class="num">$88,146</td><td class="num"><strong>$88,458</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $312 (0.4%)</td><td class="num">0.8%</td><td class="notes-cell"></td></tr>
+<tr><td class="tenant-name">513 Bernard</td><td class="num">$69,000</td><td class="num">$76,500</td><td class="num"><strong>$78,000</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $1,500 (2.0%)</td><td class="num">0.7%</td><td class="notes-cell">ARC rent up $13psf</td></tr>
+<tr><td class="tenant-name">3120-30th Ave Vernon (Jacques)</td><td class="num">$28,800</td><td class="num">$36,190</td><td class="num"><strong>$40,433</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ $4,243 (11.7%)</td><td class="num">0.4%</td><td class="notes-cell">Revenue from 2nd floor</td></tr>
+<tr><td class="tenant-name">3124-30th Ave Vernon (City Centre)</td><td class="num">$38,750</td><td class="num">$38,750</td><td class="num"><strong>$38,750</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">0.3%</td><td class="notes-cell">N/A</td></tr>
+<tr><td class="tenant-name">3119-30th Ave Hagemann Jewellers</td><td class="num">$15,829</td><td class="num">$15,829</td><td class="num"><strong>$15,829</strong></td><td class="num" style="color:var(--green);font-weight:600">▲ — (0.0%)</td><td class="num">0.1%</td><td class="notes-cell">N/A</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>TOTAL PORTFOLIO</td><td class="num">$10,633,420</td><td class="num">$10,561,306</td><td class="num">$11,384,505</td><td class="num" style="color:var(--green)">▲ $823,199 (7.8%)</td><td class="num">100%</td><td></td></tr>
+</tbody></table></div>
+<div class="section-title" style="font-size:15px;margin-top:24px;margin-bottom:12px">🔧 Property Operating Expenses — 3-Year Comparison</div>
+<div class="section-sub">These are property-level costs. Most are recovered from tenants through CAM charges.</div>
+<div class="table-wrap"><table id="tbl-fin-opex"><thead><tr><th>Expense Category</th><th class="num">FY2023</th><th class="num">FY2024</th><th class="num">FY2025</th><th class="num">YoY Change</th><th class="num">% of Total</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Property taxes</td><td class="num">$2,025,155</td><td class="num">$1,988,493</td><td class="num">$2,181,988</td><td class="num" style="color:var(--red);font-weight:600">▲ $193,495 (9.7%)</td><td class="num">51.4%</td><td class="notes-cell">Cap rates ↓, higher assessments</td></tr>
+<tr><td>Insurance</td><td class="num">$179,629</td><td class="num">$201,118</td><td class="num">$248,527</td><td class="num" style="color:var(--red);font-weight:600">▲ $47,409 (23.6%)</td><td class="num">5.9%</td><td class="notes-cell">Less insurance for more $ & ↑increased replacement cost</td></tr>
+<tr><td>Supplies and Sundry</td><td class="num">$198,950</td><td class="num">$222,157</td><td class="num">$246,342</td><td class="num" style="color:var(--red);font-weight:600">▲ $24,185 (10.9%)</td><td class="num">5.8%</td><td class="notes-cell">Includes Landscaping, which always ↑'s</td></tr>
+<tr><td>General Maintenance</td><td class="num">$182,499</td><td class="num">$210,651</td><td class="num">$239,648</td><td class="num" style="color:var(--red);font-weight:600">▲ $28,997 (13.8%)</td><td class="num">5.6%</td><td class="notes-cell">More curbing (OP Mall) & Sinclair Dental not recovered</td></tr>
+<tr><td>Water/sewer and waste removal</td><td class="num">$226,416</td><td class="num">$231,717</td><td class="num">$231,035</td><td class="num" style="color:var(--green);font-weight:600">▼ $682 (0.3%)</td><td class="num">5.4%</td><td class="notes-cell">Flat</td></tr>
+<tr><td>Security</td><td class="num">$209,820</td><td class="num">$208,802</td><td class="num">$227,285</td><td class="num" style="color:var(--red);font-weight:600">▲ $18,483 (8.9%)</td><td class="num">5.4%</td><td class="notes-cell">It's a jungle out there</td></tr>
+<tr><td>Heating and Air Conditioning</td><td class="num">$226,268</td><td class="num">$195,630</td><td class="num">$217,150</td><td class="num" style="color:var(--red);font-weight:600">▲ $21,520 (11.0%)</td><td class="num">5.1%</td><td class="notes-cell">Warmer winter</td></tr>
+<tr><td>Miscellaneous</td><td class="num">$186,142</td><td class="num">$208,843</td><td class="num">$202,371</td><td class="num" style="color:var(--green);font-weight:600">▼ $6,472 (3.1%)</td><td class="num">4.8%</td><td class="notes-cell">Management fees for properties</td></tr>
+<tr><td>Outside Lighting (electricity)</td><td class="num">$175,792</td><td class="num">$179,331</td><td class="num">$188,422</td><td class="num" style="color:var(--red);font-weight:600">▲ $9,091 (5.1%)</td><td class="num">4.4%</td><td class="notes-cell">Increased electrical costs</td></tr>
+<tr><td>Sweeping and snow removal</td><td class="num">$259,246</td><td class="num">$184,603</td><td class="num">$154,428</td><td class="num" style="color:var(--green);font-weight:600">▼ $30,175 (16.3%)</td><td class="num">3.6%</td><td class="notes-cell">Less snow events (thank the Lord)</td></tr>
+<tr><td>Janitorial</td><td class="num">$71,887</td><td class="num">$66,555</td><td class="num">$64,014</td><td class="num" style="color:var(--green);font-weight:600">▼ $2,541 (3.8%)</td><td class="num">1.5%</td><td class="notes-cell">decreased mid day cleaning and decreased bernard schedule</td></tr>
+<tr><td>Advertising</td><td class="num">$40,693</td><td class="num">$41,586</td><td class="num">$39,917</td><td class="num" style="color:var(--green);font-weight:600">▼ $1,669 (4.0%)</td><td class="num">0.9%</td><td class="notes-cell">advertising normal</td></tr>
+<tr><td>Inside lighting</td><td class="num">$4,094</td><td class="num">$6,591</td><td class="num">$4,424</td><td class="num" style="color:var(--green);font-weight:600">▼ $2,167 (32.9%)</td><td class="num">0.1%</td><td class="notes-cell">?</td></tr>
+<tr style="font-weight:700;background:var(--gray-100)"><td>TOTAL OPERATING EXPENSES</td><td class="num">$3,986,591</td><td class="num">$3,946,077</td><td class="num">$4,245,551</td><td class="num" style="color:var(--red)">▲ $299,474 (7.6%)</td><td class="num">100%</td><td></td></tr>
+<tr style="background:var(--green-light)"><td><strong>Expense Recovery from Tenants</strong></td><td class="num">$3,537,610</td><td class="num">$3,483,250</td><td class="num"><strong>$4,021,469</strong></td><td class="num" style="color:var(--green)">▲ $538,219 (15.5%)</td><td class="num">94.7% recovered</td><td class="notes-cell">CAM + property tax recovered through tenant invoices</td></tr>
+<tr style="font-weight:700;background:#fef9e7"><td>NET UNRECOVERED EXPENSE</td><td class="num">$448,981</td><td class="num">$462,827</td><td class="num">$224,082</td><td colspan="3" class="notes-cell">Landlord's net operating cost after tenant recoveries</td></tr>
+</tbody></table></div>
+<div class="section-title" style="font-size:15px;margin-top:24px;margin-bottom:6px">🏛️ Corporate G&A Summary</div>
+<div class="section-sub">Corporate overhead — includes both real estate and non-real estate items. Interest, amortization, and financing costs shown for context only.</div>
+<div class="table-wrap"><table><thead><tr><th>Category</th><th class="num">FY2023</th><th class="num">FY2024</th><th class="num">FY2025</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Advertising</td><td class="num">$12,652</td><td class="num">$51,427</td><td class="num">$40,411</td><td class="notes-cell">we are redoing the McIntosh Properties Website</td></tr>
+<tr><td>Auto and travel</td><td class="num">$12,415</td><td class="num">$8,004</td><td class="num">$10,746</td><td class="notes-cell">Historical</td></tr>
+<tr><td>Bad Debts</td><td class="num">$53,414</td><td class="num">$240,651</td><td class="num">$39,127</td><td class="notes-cell">Write-offs are caught up transfer rooms and spaces</td></tr>
+<tr><td style="color:var(--gray-600);font-style:italic">Bank Charges and Int <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:1px 5px;border-radius:3px">non-RE</span></td><td class="num" style="color:var(--gray-600);font-style:italic">$1,319,910</td><td class="num" style="color:var(--gray-600);font-style:italic">$1,428,472</td><td class="num" style="color:var(--gray-600);font-style:italic">$1,263,741</td><td class="notes-cell">Use of LOC</td></tr>
+<tr><td>management/ Broker Fee</td><td class="num">$488,257</td><td class="num">$487,440</td><td class="num">$480,451</td><td class="notes-cell">CCL Fee</td></tr>
+<tr><td style="color:var(--gray-600);font-style:italic">Donations <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:1px 5px;border-radius:3px">non-RE</span></td><td class="num" style="color:var(--gray-600);font-style:italic">$112,000</td><td class="num" style="color:var(--gray-600);font-style:italic">$112,500</td><td class="num" style="color:var(--gray-600);font-style:italic">$127,500</td><td class="notes-cell">KGH $100k, COHA $12k,</td></tr>
+<tr><td style="color:var(--gray-600);font-style:italic">Interest on loans <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:1px 5px;border-radius:3px">non-RE</span></td><td class="num" style="color:var(--gray-600);font-style:italic">$1,096,493</td><td class="num" style="color:var(--gray-600);font-style:italic">$1,979,371</td><td class="num" style="color:var(--gray-600);font-style:italic">$1,994,891</td><td class="notes-cell">remortgaged at higher rate</td></tr>
+<tr><td style="color:var(--gray-600);font-style:italic">Life Insurance <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:1px 5px;border-radius:3px">non-RE</span></td><td class="num" style="color:var(--gray-600);font-style:italic">$25,296</td><td class="num" style="color:var(--gray-600);font-style:italic">$25,296</td><td class="num" style="color:var(--gray-600);font-style:italic">$22,932</td><td class="notes-cell"></td></tr>
+<tr><td>Non-recoverable R & M</td><td class="num">$285,011</td><td class="num">$268,471</td><td class="num">$292,801</td><td class="notes-cell">Save on foods install ductless split /redid dead lavender beds in parkinglot / new RTU 2130 /new gate in breezeway cineplex</td></tr>
+<tr><td>Office</td><td class="num">$33,124</td><td class="num">$66,542</td><td class="num">$50,934</td><td class="notes-cell">D&O insurance New computers and laptops/new office subscription</td></tr>
+<tr><td>Professional fees</td><td class="num">$187,263</td><td class="num">$155,809</td><td class="num">$136,149</td><td class="notes-cell">Architect and Engineer fees not capitalized Accounting fees around G3</td></tr>
+<tr><td>Telephone</td><td class="num">$13,496</td><td class="num">$13,244</td><td class="num">$13,359</td><td class="notes-cell">Historical</td></tr>
+<tr><td>TI and commission Am</td><td class="num">$865,176</td><td class="num">$779,273</td><td class="num">$858,598</td><td class="notes-cell">↑ TI amortization with winners etc</td></tr>
+<tr><td>Wages and Benefits</td><td class="num">$1,296,789</td><td class="num">$1,313,118</td><td class="num">$1,285,113</td><td class="notes-cell"></td></tr>
+<tr><td style="color:var(--gray-600);font-style:italic">Interest on loans <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:1px 5px;border-radius:3px">non-RE</span></td><td class="num" style="color:var(--gray-600);font-style:italic">$-1,096,493</td><td class="num" style="color:var(--gray-600);font-style:italic">$-1,979,371</td><td class="num" style="color:var(--gray-600);font-style:italic">$-1,994,891</td><td class="notes-cell">Add back Int for CF purposes,</td></tr>
+<tr><td>Amortization</td><td class="num">$-865,176</td><td class="num">$-779,273</td><td class="num">$-858,598</td><td class="notes-cell">Add back non-cash Amortization for CF purposes</td></tr>
+</tbody></table></div>
+</div>
+</div>
+<footer>McIntosh Properties &mdash; Asset Management Dashboard &nbsp;&middot;&nbsp; Refreshed March 27, 2026 from live Excel files &nbsp;&middot;&nbsp; <span id="footerDate"></span></footer>
+<script>
+const now=new Date();
+const ds=now.toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('hdrDate').textContent=ds;
+document.getElementById('footerDate').textContent='Generated '+ds;
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  const map={overview:0,orchard:1,padsites:2,office1890:3,office1980:4,other:5,expirations:6,cam:7,financials:8};
+  document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function filterTbl(tblId,q,selId){
+  q=q.toLowerCase();
+  const fv=((document.getElementById(selId)||{}).value||'').toLowerCase();
+  document.querySelectorAll('#'+tblId+' tbody tr').forEach(r=>{
+    const txt=r.textContent.toLowerCase();
+    r.classList.toggle('hidden',!((!q||txt.includes(q))&&(!fv||txt.includes(fv))));
+  });
+}
+function sortTbl(id,col){
+  const tbl=document.getElementById(id);
+  const tbody=tbl.querySelector('tbody');
+  const rows=[...tbody.querySelectorAll('tr:not([style*="700"])')];
+  const asc=tbl.dataset.sc!==String(col)||tbl.dataset.sd==='desc';
+  rows.sort((a,b)=>{
+    const at=a.cells[col]?a.cells[col].textContent.trim().replace(/[$,]/g,''):'';
+    const bt=b.cells[col]?b.cells[col].textContent.trim().replace(/[$,]/g,''):'';
+    const an=parseFloat(at),bn=parseFloat(bt);
+    if(!isNaN(an)&&!isNaN(bn)) return asc?an-bn:bn-an;
+    return asc?at.localeCompare(bt):bt.localeCompare(at);
+  });
+  tbl.dataset.sc=col;tbl.dataset.sd=asc?'asc':'desc';
+  rows.forEach(r=>tbody.appendChild(r));
+}
+</script>
+</body></html>
