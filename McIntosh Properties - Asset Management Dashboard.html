@@ -70,6 +70,17 @@ tr:hover td{background:var(--gray-50)}
 footer{text-align:center;padding:20px;font-size:11px;color:var(--gray-600);border-top:1px solid var(--gray-200);margin-top:40px}
 tr.urgent td{background:#fff8f8}
 tr.attention td{background:#fffbf5}
+/* Pipeline stage badges */
+.stage-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.stage-monitoring{background:#dbeafe;color:#1e40af}
+.stage-initial{background:#fef3c7;color:#92400e}
+.stage-negotiating{background:#ede9fe;color:#6d28d9}
+.stage-agreed{background:#d1fae5;color:#065f46}
+.stage-lost{background:#fee2e2;color:#991b1b}
+.stage-vacant{background:#f3f4f6;color:#6b7280}
+.pipeline-row-urgent td{background:#fff0f0}
+.pipeline-row-attention td{background:#fffbf0}
+.pipeline-row-ok td{background:#f0fff4}
 </style>
 </head>
 <body>
@@ -97,12 +108,13 @@ tr.attention td{background:#fffbf5}
     <div class="nav-tab" onclick="show('expirations')">⏰ Lease Expirations</div>
     <div class="nav-tab" onclick="show('cam')">🏗️ CAM Details</div>
     <div class="nav-tab" onclick="show('financials')">📈 Financial Performance</div>
+    <div class="nav-tab" onclick="show('pipeline')">🎯 Leasing Pipeline</div>
   </div>
 </div>
 <div class="main">
 <div class="section active" id="section-overview">
 <div class="section-title">📊 Portfolio Overview</div>
-<div class="section-sub">Live data from Rent Roll & Lease Expiration List · Refreshed March 27, 2026</div>
+<div class="section-sub">Live data from Rent Roll & Lease Expiration List · Refreshed March 28, 2026</div>
 <div class="stats-row">
   <div class="stat-card gold"><div class="stat-label">Total Portfolio Revenue</div><div class="stat-value">$10,448,853</div><div class="stat-sub">Annual — all properties</div></div>
   <div class="stat-card"><div class="stat-label">Orchard Plaza (1876)</div><div class="stat-value">$6,946,881</div><div class="stat-sub">Inline tenants</div></div>
@@ -112,12 +124,12 @@ tr.attention td{background:#fffbf5}
   <div class="stat-card"><div class="stat-label">Other Properties</div><div class="stat-value">$1,214,690</div><div class="stat-sub">Leckie, Bernard, Penticton, Vernon</div></div>
 </div>
 <div class="stats-row">
-  <div class="stat-card red"><div class="stat-label">Leases Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk revenue: $1,393,307/yr</div></div>
-  <div class="stat-card amber"><div class="stat-label">Leases Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk revenue: $2,879,975/yr</div></div>
+  <div class="stat-card red"><div class="stat-label">Leases Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk revenue: —/yr</div></div>
+  <div class="stat-card amber"><div class="stat-label">Leases Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk revenue: $15,829/yr</div></div>
   <div class="stat-card green"><div class="stat-label">Orchard Plaza GLA</div><div class="stat-value">638,757</div><div class="stat-sub">SF · 99.2% occupied</div></div>
   <div class="stat-card blue"><div class="stat-label">FY2026 CAM Rate (Std)</div><div class="stat-value">$7.50/SF</div><div class="stat-sub">Orchard Plaza — budgeted</div></div>
 </div>
-<div class="alert-banner"><span>⚠️</span><div><strong>Action required:</strong> 15 leases expire by Dec 31/2026, representing $1,393,307 in annual revenue. See the Lease Expirations tab for full details and action notes.</div></div>
+<div class="alert-banner"><span>⚠️</span><div><strong>Action required:</strong> 15 leases expire by Dec 31/2026, representing — in annual revenue. See the Lease Expirations tab for full details and action notes.</div></div>
 </div>
 <div class="section" id="section-orchard">
 <div class="section-title">🏪 Orchard Plaza — 1876 Cooper Rd, Kelowna</div>
@@ -222,102 +234,102 @@ tr.attention td{background:#fffbf5}
 </div>
 <div class="section" id="section-expirations">
 <div class="section-title">⏰ Lease Expirations Tracker</div>
-<div class="section-sub">Live data from Lease Expiration List · 92 upcoming expirations · Refreshed March 27, 2026</div>
+<div class="section-sub">Live data from Lease Expiration List · 92 upcoming expirations · Refreshed March 28, 2026</div>
 <div class="stats-row">
-  <div class="stat-card red"><div class="stat-label">Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk: $1,393,307/yr</div></div>
-  <div class="stat-card amber"><div class="stat-label">Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk: $2,879,975/yr</div></div>
+  <div class="stat-card red"><div class="stat-label">Expiring 2026</div><div class="stat-value">15</div><div class="stat-sub">At-risk: —/yr</div></div>
+  <div class="stat-card amber"><div class="stat-label">Expiring 2027</div><div class="stat-value">20</div><div class="stat-sub">At-risk: $15,829/yr</div></div>
 </div>
 <div class="table-wrap"><table><thead><tr><th>Expiry Date</th><th>Tenant</th><th>Address</th><th>Unit</th><th class="num">Annual Rent</th><th>Priority</th></tr></thead><tbody>
-<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Dr. Brad Bishop</td><td>1890 Cooper Rd</td><td></td><td class="num">$34,305</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Lee Valley</td><td>1876 Cooper Rd</td><td>#180</td><td class="num">$237,286</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Tareq Aldajani</td><td>1890 Cooper Rd</td><td></td><td class="num">$11,400</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Healthpoint Laser 2080B</td><td></td><td></td><td class="num">$34,000</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Orchard Medical Centre</td><td>1990 Cooper Rd</td><td>#104</td><td class="num">$39,580</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Jul 31/2026</strong></td><td class="tenant-name">Dr. Farquhar</td><td>1890 Cooper Rd</td><td></td><td class="num">$35,430</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Hello Enthusiast (HSBC 2nd floor)</td><td>1890 Cooper Rd</td><td></td><td class="num">$16,296</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">$162,282</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">$113,738</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Dr. Klara Burlacu Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$30,562</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Orchard Chiropractic</td><td>1980 Cooper Rd</td><td>#212</td><td class="num">$32,368</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Chambers massage</td><td>1890 Cooper Rd</td><td></td><td class="num">$9,900</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Dr. Sarah Ohnander</td><td>1890 Cooper Rd</td><td></td><td class="num">$36,030</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Dec 7/2026</strong></td><td class="tenant-name">Famous Players</td><td>1876 Cooper Rd</td><td>#160</td><td class="num">$230,670</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="urgent"><td><strong>Dec 31/2026</strong></td><td class="tenant-name">Natures Formula Health Product</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$369,460</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
-<tr class="attention"><td><strong>Feb 19/2027</strong></td><td class="tenant-name">Winners</td><td>1876 Cooper Rd</td><td>#172</td><td class="num">$429,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">City Centre Antiques</td><td></td><td></td><td class="num">$38,750</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Maternity & Uniform Shop</td><td>1980 Cooper Rd</td><td>#109</td><td class="num">$26,910</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Jewellery Clinic</td><td>1980 Cooper Rd</td><td>Suite  #101</td><td class="num">$32,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">COHA</td><td>1890 Cooper Rd</td><td></td><td class="num">$42,784</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Apr 30/2027</strong></td><td class="tenant-name">Canadian Equipment Finance</td><td>1980 Cooper Rd</td><td>#219</td><td class="num">$20,720</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">International Gateway</td><td></td><td></td><td class="num">$14,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Claude Bernard</td><td>1980 Cooper Rd</td><td>#206</td><td class="num">$11,280</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Block Rewards</td><td></td><td></td><td class="num">$43,386</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">1840 Cooper - Royal Bank</td><td>1876 Cooper Rd</td><td>1840 Cooper</td><td class="num">$342,250</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">RBC Bank (1st floor)</td><td>1890 Cooper Rd</td><td>1st floor</td><td class="num">$185,304</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Invis</td><td>1890 Cooper Rd</td><td></td><td class="num">$18,496</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Westwood Fine Cabinets</td><td></td><td></td><td class="num">$347,760</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Dr. Brad Bishop</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Lee Valley</td><td>1876 Cooper Rd</td><td>#180</td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Tareq Aldajani</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Healthpoint Laser 2080B</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Orchard Medical Centre</td><td>1990 Cooper Rd</td><td>#104</td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Jul 31/2026</strong></td><td class="tenant-name">Dr. Farquhar</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Hello Enthusiast (HSBC 2nd floor)</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Dr. Klara Burlacu Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Orchard Chiropractic</td><td>1980 Cooper Rd</td><td>#212</td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Chambers massage</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Dr. Sarah Ohnander</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Dec 7/2026</strong></td><td class="tenant-name">Famous Players</td><td>1876 Cooper Rd</td><td>#160</td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="urgent"><td><strong>Dec 31/2026</strong></td><td class="tenant-name">Natures Formula Health Product</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">—</td><td><span class="lease-status status-expiring">⚠️ 2026</span></td></tr>
+<tr class="attention"><td><strong>Feb 19/2027</strong></td><td class="tenant-name">Winners</td><td>1876 Cooper Rd</td><td>#172</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">City Centre Antiques</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Maternity & Uniform Shop</td><td>1980 Cooper Rd</td><td>#109</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Jewellery Clinic</td><td>1980 Cooper Rd</td><td>Suite  #101</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">COHA</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2027</strong></td><td class="tenant-name">Canadian Equipment Finance</td><td>1980 Cooper Rd</td><td>#219</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">International Gateway</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Claude Bernard</td><td>1980 Cooper Rd</td><td>#206</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Block Rewards</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">1840 Cooper - Royal Bank</td><td>1876 Cooper Rd</td><td>1840 Cooper</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">RBC Bank (1st floor)</td><td>1890 Cooper Rd</td><td>1st floor</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Invis</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Westwood Fine Cabinets</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>Sep 30/2027</strong></td><td class="tenant-name">Rainer Hagemann</td><td></td><td></td><td class="num">$15,829</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Sep 30/2027</strong></td><td class="tenant-name">Allan & Mulgrew Orthodontics</td><td></td><td></td><td class="num">$47,670</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 3/2027</strong></td><td class="tenant-name">Overwaitea Foods & Drugs</td><td>1876 Cooper Rd</td><td>Suite  #101</td><td class="num">$892,468</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2027</strong></td><td class="tenant-name">Cruiseship Centers</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">$20,268</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Nov 30/2027</strong></td><td class="tenant-name">Bank of Nova Scotia</td><td></td><td></td><td class="num">$56,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$287,712</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">$7,188</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">$12,780</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">$7,650</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Dr. Specs Optical</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">$40,365</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Canadian Hearing Care</td><td>1876 Cooper Rd</td><td>#110</td><td class="num">$37,638</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Apr 14/2028</strong></td><td class="tenant-name">1860 Cooper - Valley First Credit Union</td><td>1876 Cooper Rd</td><td>1860 Cooper</td><td class="num">$218,400</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Apr 30/2028</strong></td><td class="tenant-name">Sherwin Williams</td><td>1990 Cooper Rd</td><td>#101</td><td class="num">$89,884</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Eco Clean</td><td>1980 Cooper Rd</td><td>#105</td><td class="num">$27,360</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2027</strong></td><td class="tenant-name">Allan & Mulgrew Orthodontics</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 3/2027</strong></td><td class="tenant-name">Overwaitea Foods & Drugs</td><td>1876 Cooper Rd</td><td>Suite  #101</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2027</strong></td><td class="tenant-name">Cruiseship Centers</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2027</strong></td><td class="tenant-name">Bank of Nova Scotia</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2027</strong></td><td class="tenant-name">Natures Fare</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2028</strong></td><td class="tenant-name">Ocana Law</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Dr. Specs Optical</td><td>1876 Cooper Rd</td><td>#106</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2028</strong></td><td class="tenant-name">Canadian Hearing Care</td><td>1876 Cooper Rd</td><td>#110</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 14/2028</strong></td><td class="tenant-name">1860 Cooper - Valley First Credit Union</td><td>1876 Cooper Rd</td><td>1860 Cooper</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2028</strong></td><td class="tenant-name">Sherwin Williams</td><td>1990 Cooper Rd</td><td>#101</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Eco Clean</td><td>1980 Cooper Rd</td><td>#105</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Mascan Equities</td><td></td><td></td><td class="num">$30,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Percs Place Ltd.</td><td>1876 Cooper Rd</td><td>#146</td><td class="num">$43,260</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Paradigm Mortgage Corporation</td><td>1980 Cooper Rd</td><td>#210</td><td class="num">$27,600</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Mission Creek Mortgage Ltd.</td><td>1980 Cooper Rd</td><td>#207</td><td class="num">$18,840</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2028</strong></td><td class="tenant-name">Dr. Darren Berg Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$36,736</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Connect Counselling</td><td>1890 Cooper Rd</td><td></td><td class="num">$55,632</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Diva Nails</td><td>1980 Cooper Rd</td><td>#104</td><td class="num">$21,492</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Sep 14/2028</strong></td><td class="tenant-name">1920 Cooper - Red Robin Restaurant</td><td>1876 Cooper Rd</td><td>1920 Cooper</td><td class="num">$205,216</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Sep 30/2028</strong></td><td class="tenant-name">Wesco</td><td></td><td></td><td class="num">$245,792</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Running Room Canada Inc.</td><td>1876 Cooper Rd</td><td>#124</td><td class="num">$39,270</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Argen</td><td></td><td></td><td class="num">$104,368</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Nucca</td><td>1890 Cooper Rd</td><td></td><td class="num">$26,112</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">123 Dental (Dr. Steven Faigan)</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,928</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">Wolseley</td><td></td><td></td><td class="num">$234,936</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 14/2028</strong></td><td class="tenant-name">Kelowna Valley Insurance</td><td>1876 Cooper Rd</td><td>#156</td><td class="num">$93,632</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jan 31/2029</strong></td><td class="tenant-name">Dr. Don Eagleton</td><td>1890 Cooper Rd</td><td></td><td class="num">$23,520</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Feb 14/2029</strong></td><td class="tenant-name">Bone & Biscuit Company</td><td>1876 Cooper Rd</td><td>#136</td><td class="num">$40,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2029</strong></td><td class="tenant-name">Dr. Graham Hill Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,576</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Sneak a Peek Ultrasound Inc</td><td>1980 Cooper Rd</td><td>#103</td><td class="num">$26,505</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Bridal Shop</td><td></td><td></td><td class="num">$18,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Yury salon</td><td>1876 Cooper Rd</td><td>#140</td><td class="num">$35,100</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Dr. Stephen Malfair Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">$26,752</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Aug 31/2029</strong></td><td class="tenant-name">Naito/Sambrielaz</td><td>1980 Cooper Rd</td><td>#202</td><td class="num">$21,840</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2028</strong></td><td class="tenant-name">Percs Place Ltd.</td><td>1876 Cooper Rd</td><td>#146</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Paradigm Mortgage Corporation</td><td>1980 Cooper Rd</td><td>#210</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2028</strong></td><td class="tenant-name">Mission Creek Mortgage Ltd.</td><td>1980 Cooper Rd</td><td>#207</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2028</strong></td><td class="tenant-name">Dr. Darren Berg Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Connect Counselling</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2028</strong></td><td class="tenant-name">Diva Nails</td><td>1980 Cooper Rd</td><td>#104</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 14/2028</strong></td><td class="tenant-name">1920 Cooper - Red Robin Restaurant</td><td>1876 Cooper Rd</td><td>1920 Cooper</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2028</strong></td><td class="tenant-name">Wesco</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Running Room Canada Inc.</td><td>1876 Cooper Rd</td><td>#124</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Argen</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2028</strong></td><td class="tenant-name">Nucca</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">123 Dental (Dr. Steven Faigan)</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2028</strong></td><td class="tenant-name">Wolseley</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 14/2028</strong></td><td class="tenant-name">Kelowna Valley Insurance</td><td>1876 Cooper Rd</td><td>#156</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2029</strong></td><td class="tenant-name">Dr. Don Eagleton</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 14/2029</strong></td><td class="tenant-name">Bone & Biscuit Company</td><td>1876 Cooper Rd</td><td>#136</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2029</strong></td><td class="tenant-name">Dr. Graham Hill Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Sneak a Peek Ultrasound Inc</td><td>1980 Cooper Rd</td><td>#103</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2029</strong></td><td class="tenant-name">Bridal Shop</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Yury salon</td><td>1876 Cooper Rd</td><td>#140</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2029</strong></td><td class="tenant-name">Dr. Stephen Malfair Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Aug 31/2029</strong></td><td class="tenant-name">Naito/Sambrielaz</td><td>1980 Cooper Rd</td><td>#202</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Oopsie Daisy</td><td></td><td></td><td class="num">$12,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Rocky Mountain Fitness</td><td>1876 Cooper Rd</td><td>#130</td><td class="num">$148,512</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Rocky Mountain Fitness</td><td>1876 Cooper Rd</td><td>#130</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>Oct 31/2029</strong></td><td class="tenant-name">Oopsie Daisy</td><td></td><td></td><td class="num">$13,200</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 31/2029</strong></td><td class="tenant-name">De Dutch 2080A</td><td>1876 Cooper Rd</td><td>2080A Springfield</td><td class="num">$47,160</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Feb 28/2030</strong></td><td class="tenant-name">Chevy's Source For Sports</td><td>1876 Cooper Rd</td><td>#126</td><td class="num">$143,424</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Apr 30/2030</strong></td><td class="tenant-name">O-Ka Japanese Restaurant</td><td>1876 Cooper Rd</td><td>#108</td><td class="num">$37,800</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>May 31/2030</strong></td><td class="tenant-name">Empire (Remedy)</td><td>1876 Cooper Rd</td><td>#152</td><td class="num">$32,625</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2030</strong></td><td class="tenant-name">Mon Thong</td><td>1876 Cooper Rd</td><td>#148</td><td class="num">$45,160</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2030</strong></td><td class="tenant-name">Dr. Brendon Burgess Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">$24,416</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 31/2030</strong></td><td class="tenant-name">Intagen Wealth</td><td>1890 Cooper Rd</td><td></td><td class="num">$12,920</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Feb 28/2031</strong></td><td class="tenant-name">National Computer Resource Ltd</td><td>1980 Cooper Rd</td><td>#102</td><td class="num">$26,910</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2029</strong></td><td class="tenant-name">De Dutch 2080A</td><td>1876 Cooper Rd</td><td>2080A Springfield</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2030</strong></td><td class="tenant-name">Chevy's Source For Sports</td><td>1876 Cooper Rd</td><td>#126</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Apr 30/2030</strong></td><td class="tenant-name">O-Ka Japanese Restaurant</td><td>1876 Cooper Rd</td><td>#108</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 31/2030</strong></td><td class="tenant-name">Empire (Remedy)</td><td>1876 Cooper Rd</td><td>#152</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2030</strong></td><td class="tenant-name">Mon Thong</td><td>1876 Cooper Rd</td><td>#148</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2030</strong></td><td class="tenant-name">Dr. Brendon Burgess Inc.</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2030</strong></td><td class="tenant-name">Intagen Wealth</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2031</strong></td><td class="tenant-name">National Computer Resource Ltd</td><td>1980 Cooper Rd</td><td>#102</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>May 31/2031</strong></td><td class="tenant-name">Oxford 5 acre ground lease</td><td></td><td></td><td class="num">$750,000</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Oct 31/2031</strong></td><td class="tenant-name">220 Dr Ohnander</td><td>1890 Cooper Rd</td><td>220</td><td class="num">$16,480</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jan 31/2032</strong></td><td class="tenant-name">Jysk</td><td>1876 Cooper Rd</td><td>#170</td><td class="num">$379,862</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Sep 30/2033</strong></td><td class="tenant-name">Urospot</td><td>1876 Cooper Rd</td><td>#132</td><td class="num">$40,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 31/2033</strong></td><td class="tenant-name">Gentek Building Supplies</td><td></td><td></td><td class="num">$675,645</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Chopped Leaf</td><td>1876 Cooper Rd</td><td>#142</td><td class="num">$49,693</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Hut 8</td><td></td><td></td><td class="num">$438,138</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jul 31/2034</strong></td><td class="tenant-name">Kelowna Medical Imaging</td><td>1890 Cooper Rd</td><td></td><td class="num">$41,616</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Sep 30/2034</strong></td><td class="tenant-name">Little Kitchen Academy</td><td>1876 Cooper Rd</td><td>#138</td><td class="num">$42,900</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>May 30/2035</strong></td><td class="tenant-name">Safe Harbour</td><td>1980 Cooper Rd</td><td>#108</td><td class="num">$25,128</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Feb 28/2036</strong></td><td class="tenant-name">MEC</td><td>1876 Cooper Rd</td><td>#100</td><td class="num">$428,184</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Jun 30/2036</strong></td><td class="tenant-name">115-1890 Cooper Dr Sida Zeng</td><td>1890 Cooper Rd</td><td>115</td><td class="num">$31,584</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Dec 31/2036</strong></td><td class="tenant-name">WorkSafe BC</td><td></td><td></td><td class="num">$1,644,852</td><td><span class="lease-status status-attention">2027</span></td></tr>
-<tr class="attention"><td><strong>Nov 30/2039</strong></td><td class="tenant-name">1950 Cooper - National Bank</td><td>1876 Cooper Rd</td><td>1950 Cooper</td><td class="num">$426,300</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Oct 31/2031</strong></td><td class="tenant-name">220 Dr Ohnander</td><td>1890 Cooper Rd</td><td>220</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jan 31/2032</strong></td><td class="tenant-name">Jysk</td><td>1876 Cooper Rd</td><td>#170</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2033</strong></td><td class="tenant-name">Urospot</td><td>1876 Cooper Rd</td><td>#132</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2033</strong></td><td class="tenant-name">Gentek Building Supplies</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Chopped Leaf</td><td>1876 Cooper Rd</td><td>#142</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Mar 31/2034</strong></td><td class="tenant-name">Hut 8</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jul 31/2034</strong></td><td class="tenant-name">Kelowna Medical Imaging</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Sep 30/2034</strong></td><td class="tenant-name">Little Kitchen Academy</td><td>1876 Cooper Rd</td><td>#138</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>May 30/2035</strong></td><td class="tenant-name">Safe Harbour</td><td>1980 Cooper Rd</td><td>#108</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Feb 28/2036</strong></td><td class="tenant-name">MEC</td><td>1876 Cooper Rd</td><td>#100</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Jun 30/2036</strong></td><td class="tenant-name">115-1890 Cooper Dr Sida Zeng</td><td>1890 Cooper Rd</td><td>115</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Dec 31/2036</strong></td><td class="tenant-name">WorkSafe BC</td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
+<tr class="attention"><td><strong>Nov 30/2039</strong></td><td class="tenant-name">1950 Cooper - National Bank</td><td>1876 Cooper Rd</td><td>1950 Cooper</td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>Dec 31/2040</strong></td><td class="tenant-name"></td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 <tr class="attention"><td><strong>Dec 31/2040</strong></td><td class="tenant-name"></td><td></td><td></td><td class="num">—</td><td><span class="lease-status status-attention">2027</span></td></tr>
 </tbody></table></div>
@@ -624,8 +636,70 @@ tr.attention td{background:#fffbf5}
 <tr><td>Amortization</td><td class="num">$-865,176</td><td class="num">$-779,273</td><td class="num">$-858,598</td><td class="notes-cell">Add back non-cash Amortization for CF purposes</td></tr>
 </tbody></table></div>
 </div>
+<div class="section" id="section-pipeline">
+<div class="section-title">🎯 Leasing Pipeline — 18-Month Rolling Tracker</div>
+<div class="section-sub">Leases expiring within 18 months · Deal stage tracking · Updated March 28, 2026</div>
+<div class="stats-row">
+  <div class="stat-card red"><div class="stat-label">Total At-Risk Revenue</div><div class="stat-value">$160,000</div><div class="stat-sub">38 leases expiring ≤18 months</div></div>
+  <div class="stat-card amber"><div class="stat-label">Not Yet Contacted</div><div class="stat-value">38</div><div class="stat-sub">Monitoring / no stage set</div></div>
+  <div class="stat-card"><div class="stat-label">Actively Negotiating</div><div class="stat-value">—</div><div class="stat-sub">Terms in discussion</div></div>
+  <div class="stat-card green"><div class="stat-label">Terms Agreed / In Docs</div><div class="stat-value">—</div><div class="stat-sub">Renewals secured</div></div>
+  <div class="stat-card red"><div class="stat-label">Lost / Vacating</div><div class="stat-value">—</div><div class="stat-sub">Revenue at risk of loss</div></div>
 </div>
-<footer>McIntosh Properties &mdash; Asset Management Dashboard &nbsp;&middot;&nbsp; Refreshed March 27, 2026 from live Excel files &nbsp;&middot;&nbsp; <span id="footerDate"></span></footer>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center"><strong style="font-size:12px;color:var(--gray-700)">Deal Stages:</strong>
+<span class="stage-badge stage-monitoring">Monitoring (0)</span>
+<span class="stage-badge stage-initial">Initial Contact (0)</span>
+<span class="stage-badge stage-negotiating">Negotiating (0)</span>
+<span class="stage-badge stage-agreed">Terms Agreed (0)</span>
+<span class="stage-badge stage-lost">Lost / Vacating (0)</span>
+</div>
+<div class="search-bar"><input type="text" placeholder="Search tenant or address…" oninput="filterTbl('tbl-pipeline',this.value,'sel-pipeline')"><select id="sel-pipeline" onchange="filterTbl('tbl-pipeline',document.querySelector('#section-pipeline input').value,'sel-pipeline')"><option value="">All Stages</option><option value="Monitoring">Monitoring / Not Started</option><option value="Initial Contact">Initial Contact Made</option><option value="Negotiating">Negotiating Terms</option><option value="Terms Agreed">Terms Agreed / In Docs</option><option value="Lost">Lost / Vacating</option></select><select onchange="filterUrgency(this.value)" style="padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px"><option value="">All Urgency</option><option value="pipeline-row-urgent">Expiring ≤3 months</option><option value="pipeline-row-attention">Expiring 3–9 months</option><option value="pipeline-row-ok">Expiring 9–18 months</option></select></div>
+<div class="table-wrap"><table id="tbl-pipeline"><thead><tr><th onclick="sortTbl('tbl-pipeline',0)" style="cursor:pointer">Expiry Date</th><th onclick="sortTbl('tbl-pipeline',1)" style="cursor:pointer">Tenant</th><th onclick="sortTbl('tbl-pipeline',2)" style="cursor:pointer">Address</th><th onclick="sortTbl('tbl-pipeline',3)" style="cursor:pointer">Unit</th><th onclick="sortTbl('tbl-pipeline',4)" style="cursor:pointer">GLA (SF)</th><th onclick="sortTbl('tbl-pipeline',5)" style="cursor:pointer">Annual Rent</th><th onclick="sortTbl('tbl-pipeline',6)" style="cursor:pointer">Deal Stage</th><th onclick="sortTbl('tbl-pipeline',7)" style="cursor:pointer">Last Contact</th><th onclick="sortTbl('tbl-pipeline',8)" style="cursor:pointer">Next Follow-Up</th><th onclick="sortTbl('tbl-pipeline',9)" style="cursor:pointer">Agent</th><th onclick="sortTbl('tbl-pipeline',10)" style="cursor:pointer">Activity / Commentary</th></tr></thead><tbody>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Heather Polak</td><td>1980 Cooper Rd</td><td>#110</td><td class="num">1,400</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">VACANT - Target storage</td><td></td><td></td><td class="num">9,450</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Storage</td><td></td><td></td><td class="num">1,142</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Focus Rehabilitation</td><td>1890 Cooper Rd</td><td></td><td class="num">658</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Cooper Jewellers</td><td>1876 Cooper Rd</td><td>#134</td><td class="num">1,300</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Aqua Friends</td><td>1990 Cooper Rd</td><td>#103</td><td class="num">3,802</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 1/2024</strong></td><td class="tenant-name">Phase IV Weighloss</td><td>1980 Cooper Rd</td><td>#107</td><td class="num">1,240</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 31/2024</strong></td><td class="tenant-name">2080C Springfield - Hasla</td><td>1876 Cooper Rd</td><td>2080C Springfield</td><td class="num">1,800</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 31/2025</strong></td><td class="tenant-name">Burger King Canada Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td class="num">$160,000</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Dec 31/2025</strong></td><td class="tenant-name">ARC Programs Ltd.</td><td></td><td></td><td class="num">6,000</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Dr. Brad Bishop</td><td>1890 Cooper Rd</td><td></td><td class="num">—</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Apr 30/2026</strong></td><td class="tenant-name">Lee Valley</td><td>1876 Cooper Rd</td><td>#180</td><td class="num">16,949</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Tareq Aldajani</td><td>1890 Cooper Rd</td><td></td><td class="num">760</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Healthpoint Laser 2080B</td><td></td><td></td><td class="num">1,700</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-urgent"><td><strong>Jun 30/2026</strong></td><td class="tenant-name">Orchard Medical Centre</td><td>1990 Cooper Rd</td><td>#104</td><td class="num">1,979</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Jul 31/2026</strong></td><td class="tenant-name">Dr. Farquhar</td><td>1890 Cooper Rd</td><td></td><td class="num">2,362</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Hello Enthusiast (HSBC 2nd floor)</td><td>1890 Cooper Rd</td><td></td><td class="num">1,164</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">8,772</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Aug 31/2026</strong></td><td class="tenant-name">Royal LePage Real Estate Ltd.</td><td>1890 Cooper Rd</td><td></td><td class="num">6,148</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Dr. Klara Burlacu Inc</td><td>1890 Cooper Rd</td><td></td><td class="num">2,183</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Sep 30/2026</strong></td><td class="tenant-name">Orchard Chiropractic</td><td>1980 Cooper Rd</td><td>#212</td><td class="num">2,312</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Chambers massage</td><td>1890 Cooper Rd</td><td></td><td class="num">660</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Oct 31/2026</strong></td><td class="tenant-name">Dr. Sarah Ohnander</td><td>1890 Cooper Rd</td><td></td><td class="num">2,402</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Dec 7/2026</strong></td><td class="tenant-name">Famous Players</td><td>1876 Cooper Rd</td><td>#160</td><td class="num">23,067</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-attention"><td><strong>Dec 31/2026</strong></td><td class="tenant-name">Natures Formula Health Product</td><td>1876 Cooper Rd</td><td>#120</td><td class="num">28,420</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Feb 19/2027</strong></td><td class="tenant-name">Winners</td><td>1876 Cooper Rd</td><td>#172</td><td class="num">33,000</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">City Centre Antiques</td><td></td><td></td><td class="num">5,000</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Maternity & Uniform Shop</td><td>1980 Cooper Rd</td><td>#109</td><td class="num">1,495</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">Jewellery Clinic</td><td>1980 Cooper Rd</td><td>Suite  #101</td><td class="num">1,400</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Mar 31/2027</strong></td><td class="tenant-name">COHA</td><td>1890 Cooper Rd</td><td></td><td class="num">3,056</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Apr 30/2027</strong></td><td class="tenant-name">Canadian Equipment Finance</td><td>1980 Cooper Rd</td><td>#219</td><td class="num">1,480</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">International Gateway</td><td></td><td></td><td class="num">1,000</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Claude Bernard</td><td>1980 Cooper Rd</td><td>#206</td><td class="num">752</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">Block Rewards</td><td></td><td></td><td class="num">3,099</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">1840 Cooper - Royal Bank</td><td>1876 Cooper Rd</td><td>1840 Cooper</td><td class="num">9,250</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Jul 31/2027</strong></td><td class="tenant-name">RBC Bank (1st floor)</td><td>1890 Cooper Rd</td><td>1st floor</td><td class="num">6,618</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Invis</td><td>1890 Cooper Rd</td><td></td><td class="num">1,156</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+<tr class="pipeline-row-ok"><td><strong>Aug 31/2027</strong></td><td class="tenant-name">Westwood Fine Cabinets</td><td></td><td></td><td class="num">28,980</td><td class="num">—</td><td><span class="stage-badge stage-monitoring">Monitoring</span></td><td>—</td><td>—</td><td></td><td class="notes-cell"></td></tr>
+</tbody></table></div>
+<div style="background:var(--teal-light);border-left:4px solid var(--teal);border-radius:var(--radius);padding:14px 16px;font-size:13px;color:#1a5560;margin-top:8px">
+<strong>📝 How to update the pipeline:</strong> Open the <em>Lease Expiration List</em> in SharePoint → go to the <em>Total Revenue by Tenant (2)</em> sheet → fill in columns N–R (Deal Stage, Last Contact, Next Follow-Up, Agent, Activity). The dashboard auto-refreshes daily.
+</div>
+</div>
+</div>
+<footer>McIntosh Properties &mdash; Asset Management Dashboard &nbsp;&middot;&nbsp; Refreshed March 28, 2026 from live Excel files &nbsp;&middot;&nbsp; <span id="footerDate"></span></footer>
 <script>
 const now=new Date();
 const ds=now.toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -635,7 +709,7 @@ function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('section-'+id).classList.add('active');
-  const map={overview:0,orchard:1,padsites:2,office1890:3,office1980:4,other:5,expirations:6,cam:7,financials:8};
+  const map={overview:0,orchard:1,padsites:2,office1890:3,office1980:4,other:5,expirations:6,cam:7,financials:8,pipeline:9};
   document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -645,6 +719,11 @@ function filterTbl(tblId,q,selId){
   document.querySelectorAll('#'+tblId+' tbody tr').forEach(r=>{
     const txt=r.textContent.toLowerCase();
     r.classList.toggle('hidden',!((!q||txt.includes(q))&&(!fv||txt.includes(fv))));
+  });
+}
+function filterUrgency(cls){
+  document.querySelectorAll('#tbl-pipeline tbody tr').forEach(r=>{
+    r.classList.toggle('hidden',!!(cls && !r.classList.contains(cls)));
   });
 }
 function sortTbl(id,col){
